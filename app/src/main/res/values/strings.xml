@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">EChatGPT</string>
+    <string name="send_Input_Chat_Message">Send input chat message</string>
+    <string name="enter_message">Enter message here</string>
+    <string name="enter_token">Enter your token here</string>
+    <string name="set">SET</string>
+</resources>

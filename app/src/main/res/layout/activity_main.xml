@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/content_white"
+        tools:context=".activity.MainActivity">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/chat_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/chat_input_box"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.helper.widget.Layer
+            android:id="@+id/chat_input"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/main_color"
+            app:constraint_referenced_ids="chat_input_box,send" />
+
+        <EditText
+            android:id="@+id/chat_input_box"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:hint="@string/enter_message"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            android:padding="@dimen/content_padding"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/content_text_size"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/send"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/send"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:contentDescription="@string/send_Input_Chat_Message"
+            android:padding="@dimen/content_padding"
+            android:src="@drawable/send_msg"
+            app:layout_constraintBottom_toBottomOf="@id/chat_input_box"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/chat_input_box" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
