@@ -13,7 +13,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/chat_list"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/input_box_height"
             app:layout_constraintBottom_toTopOf="@id/chat_input_box"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -27,8 +28,9 @@
         <EditText
             android:id="@+id/chat_input_box"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/input_box_height"
             android:background="@color/white"
+            android:elevation="@dimen/content_elevation"
             android:hint="@string/enter_message"
             android:importantForAutofill="no"
             android:inputType="text"
@@ -45,6 +47,7 @@
             android:layout_height="0dp"
             android:background="?android:selectableItemBackground"
             android:contentDescription="@string/send_Input_Chat_Message"
+            android:elevation="@dimen/content_elevation"
             android:padding="@dimen/content_padding"
             android:src="@drawable/send_msg"
             app:layout_constraintBottom_toBottomOf="@id/chat_input_box"
@@ -57,6 +60,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@color/main_color"
+            android:elevation="@dimen/content_elevation"
             android:indeterminateTint="@color/white"
             android:padding="@dimen/content_padding"
             android:visibility="invisible"

@@ -8,11 +8,9 @@ import com.protone.eChatGPT.adapter.ChatListAdapter
 import com.protone.eChatGPT.databinding.MainActivityBinding
 import com.protone.eChatGPT.repository.userConfig
 import com.protone.eChatGPT.service.ChatService
-import com.protone.eChatGPT.utils.intent
-import com.protone.eChatGPT.utils.linkInput
-import com.protone.eChatGPT.utils.showGetTokenPop
-import com.protone.eChatGPT.utils.withMainContext
+import com.protone.eChatGPT.utils.*
 import com.protone.eChatGPT.viewModel.MainViewModel
+import kotlinx.coroutines.launch
 
 class MainActivity : BaseActivity<MainActivityBinding, MainViewModel>() {
     override val viewModel: MainViewModel by viewModels()
@@ -37,9 +35,7 @@ class MainActivity : BaseActivity<MainActivityBinding, MainViewModel>() {
                 chatInputBox.text.clear()
                 chatListAdapter.chatSent(viewModel.getUserChatItem(msg))
                 viewModel.chat(msg) { chatItem ->
-                    withMainContext {
-                        chatListAdapter.receive(chatItem)
-                    }
+                    launch { chatListAdapter.receive(chatItem) }
                 }
             }
         }

@@ -40,13 +40,19 @@ class ChatListAdapter : Adapter<ViewBindingHolder<ChatItemLayoutBinding>>(),
 
     override fun onBindViewHolder(holder: ViewBindingHolder<ChatItemLayoutBinding>, position: Int) {
         val chatItem = getChatItem(position)
-        holder.binding.root.setBackgroundResource(
+        holder.binding.apply {
             when (chatItem.target) {
-                ChatItem.ChatTarget.AI -> R.color.ai_content
-                ChatItem.ChatTarget.HUMAN -> R.color.human_content
+                ChatItem.ChatTarget.AI -> {
+                    root.setBackgroundResource(R.color.ai_content)
+                    root.elevation = 0f
+                }
+                ChatItem.ChatTarget.HUMAN -> {
+                    root.setBackgroundResource(R.color.human_content)
+                    root.elevation = 4f
+                }
             }
-        )
-        holder.binding.content.text = chatItem.content
+            content.text = chatItem.content
+        }
     }
 
     data class ChatItem(val id: String, val target: ChatTarget, val time: String) {
