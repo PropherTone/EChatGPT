@@ -2,4 +2,5 @@
 <resources>
     <dimen name="content_padding">12dp</dimen>
     <dimen name="content_text_size">18sp</dimen>
+    <dimen name="chat_item_minH">64dp</dimen>
 </resources>

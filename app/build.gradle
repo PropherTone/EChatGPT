@@ -36,6 +36,14 @@ android {
         dataBinding true
     }
 
+    configurations {
+        implementation.exclude group: 'org.jetbrains', module: 'annotations'
+    }
+
+    packagingOptions {
+        exclude 'META-INF/gradle/incremental.annotation.processors'
+    }
+
 }
 
 dependencies {
@@ -50,15 +58,20 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
-
     //Chat-GPT API
-    implementation platform('com.aallam.openai:openai-client-bom:3.1.1')
-    // define dependencies without versions
-    implementation 'com.aallam.openai:openai-client'
-    implementation 'io.ktor:ktor-client-okhttp'
+    implementation platform(OpenAiPack.openAiClientBOM)
+    implementation OpenAiPack.openAiClient
+    implementation OpenAiPack.ktorClientOkhttp
 
     implementation LifeCyclePack.viewModel
     implementation LifeCyclePack.lifecycle
     implementation LifeCyclePack.viewModelSavedState
     implementation LifeCyclePack.lifecycleCompilerAPT
+
+    implementation DataBasePack.dataStore
+    implementation DataBasePack.roomCompiler
+    implementation DataBasePack.roomKtx
+    implementation DataBasePack.roomRuntime
+
+    implementation Libs.gson
 }

@@ -4,4 +4,7 @@
     <string name="enter_message">Enter message here</string>
     <string name="enter_token">Enter your token here</string>
     <string name="set">SET</string>
+    <string name="error">error</string>
+    <string name="net_work_timeout">Network timeout</string>
+    <string name="open_chat">Open chat</string>
 </resources>

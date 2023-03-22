@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <EditText
+        android:id="@+id/chat_input_box"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:hint="@string/enter_message"
+        android:importantForAutofill="no"
+        android:inputType="text"
+        android:padding="@dimen/content_padding"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/content_text_size"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/send"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/send"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="?android:selectableItemBackground"
+        android:contentDescription="@string/send_Input_Chat_Message"
+        android:padding="@dimen/content_padding"
+        android:src="@drawable/send_msg"
+        app:layout_constraintBottom_toBottomOf="@id/chat_input_box"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/chat_input_box" />
+
+    <ProgressBar
+        android:id="@+id/chat_state"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/main_color"
+        android:indeterminateTint="@color/white"
+        android:padding="@dimen/content_padding"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@id/send"
+        app:layout_constraintEnd_toEndOf="@id/send"
+        app:layout_constraintStart_toStartOf="@id/send"
+        app:layout_constraintTop_toTopOf="@id/send" />
+
+</merge>

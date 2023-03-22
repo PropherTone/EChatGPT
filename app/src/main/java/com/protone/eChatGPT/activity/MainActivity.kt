@@ -1,18 +1,61 @@
 package com.protone.eChatGPT.activity
 
 import androidx.activity.viewModels
-import com.protone.eChatGPT.databinding.ActivityMainBinding
+import androidx.core.view.isVisible
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.protone.eChatGPT.adapter.ChatListAdapter
+import com.protone.eChatGPT.databinding.MainActivityBinding
+import com.protone.eChatGPT.repository.userConfig
+import com.protone.eChatGPT.service.ChatService
+import com.protone.eChatGPT.utils.intent
+import com.protone.eChatGPT.utils.linkInput
+import com.protone.eChatGPT.utils.showGetTokenPop
+import com.protone.eChatGPT.utils.withMainContext
 import com.protone.eChatGPT.viewModel.MainViewModel
 
-class MainActivity : BaseActivity<ActivityMainBinding,MainViewModel>() {
+class MainActivity : BaseActivity<MainActivityBinding, MainViewModel>() {
     override val viewModel: MainViewModel by viewModels()
 
-    override fun createView(): ActivityMainBinding {
-        return ActivityMainBinding.inflate(layoutInflater)
+    private val chatListAdapter by lazy { ChatListAdapter() }
+
+    override fun createView(): MainActivityBinding {
+        return MainActivityBinding.inflate(layoutInflater).apply {
+            root.post {
+                if (userConfig.token.isEmpty()) showGetTokenPop(root) {
+                    userConfig.token = it.toString()
+                    startService(ChatService::class.intent)
+                }.apply { setOnDismissListener { userConfig.token.ifEmpty { finish() } } }
+                else startService(ChatService::class.intent)
+            }
+            linkInput(chatList, chatInputBox)
+            linkInput(root, chatInputBox)
+            chatList.init()
+            send.setOnClickListener {
+                val msg = chatInputBox.text.toString()
+                if (msg.isEmpty()) return@setOnClickListener
+                chatInputBox.text.clear()
+                chatListAdapter.chatSent(viewModel.getUserChatItem(msg))
+                viewModel.chat(msg) { chatItem ->
+                    withMainContext {
+                        chatListAdapter.receive(chatItem)
+                    }
+                }
+            }
+        }
     }
 
-    override fun init() {
-        viewModel.init("")
+    override fun MainViewModel.init() {
+        conversationState.observe(this@MainActivity) {
+            binding.chatState.isVisible = it
+        }
+    }
+
+    private fun RecyclerView.init() {
+        layoutManager = LinearLayoutManager(this@MainActivity).apply {
+            stackFromEnd = true
+        }
+        adapter = chatListAdapter
     }
 
 }

@@ -2,10 +2,12 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/content_white"
+        android:fitsSystemWindows="true"
         tools:context=".activity.MainActivity">
 
         <androidx.recyclerview.widget.RecyclerView
@@ -41,6 +43,7 @@
             android:id="@+id/send"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:background="?android:selectableItemBackground"
             android:contentDescription="@string/send_Input_Chat_Message"
             android:padding="@dimen/content_padding"
             android:src="@drawable/send_msg"
@@ -48,6 +51,19 @@
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/chat_input_box" />
+
+        <ProgressBar
+            android:id="@+id/chat_state"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/main_color"
+            android:indeterminateTint="@color/white"
+            android:padding="@dimen/content_padding"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@id/send"
+            app:layout_constraintEnd_toEndOf="@id/send"
+            app:layout_constraintStart_toStartOf="@id/send"
+            app:layout_constraintTop_toTopOf="@id/send" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
