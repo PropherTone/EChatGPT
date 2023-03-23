@@ -1,6 +1,7 @@
 package com.protone.eChatGPT.adapter
 
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.protone.eChatGPT.R
 import com.protone.eChatGPT.bean.ChatItem
@@ -12,6 +13,13 @@ class ChatListAdapter : Adapter<ViewBindingHolder<ChatItemLayoutBinding>>(),
 
     init {
         attach()
+    }
+
+    lateinit var rv: RecyclerView
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        rv = recyclerView
     }
 
     override fun onCreateViewHolder(
@@ -75,6 +83,7 @@ interface ChatHelper {
         override fun chatSent(chatItem: ChatItem) {
             chatList.add(chatItem)
             adapter.notifyItemInserted(chatList.size)
+            adapter.rv.scrollToPosition(chatList.size - 1)
         }
 
         override fun receive(chatItem: ChatItem) {

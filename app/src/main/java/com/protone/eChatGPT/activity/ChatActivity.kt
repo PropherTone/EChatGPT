@@ -1,5 +1,6 @@
 package com.protone.eChatGPT.activity
 
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,6 +15,7 @@ import com.protone.eChatGPT.service.ChatService
 import com.protone.eChatGPT.utils.*
 import com.protone.eChatGPT.viewModel.ChatViewModel
 import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
 
 class ChatActivity : BaseActivity<MainActivityBinding, ChatViewModel>() {
     override val viewModel: ChatViewModel by viewModels()
@@ -31,6 +33,9 @@ class ChatActivity : BaseActivity<MainActivityBinding, ChatViewModel>() {
                     startService(ChatService::class.intent)
                 }.apply { setOnDismissListener { token.ifEmpty { finish() } } }
                 else startService(ChatService::class.intent)
+            }
+            chatInput.post {
+                chatList.marginBottom(root.measuredHeight - chatInputBox.y.roundToInt())
             }
 
             linkInput(chatList, chatInputBox)

@@ -25,7 +25,7 @@ import kotlinx.coroutines.cancel
 class ChatViewModel : ViewModel() {
 
     companion object {
-        const val CONVERSATION_TIME_OUT = 3000L
+        const val CONVERSATION_TIME_OUT = 100L
     }
 
     private val openAi: OpenAiHelper by lazy { OpenAiHelper(userConfig.token) }

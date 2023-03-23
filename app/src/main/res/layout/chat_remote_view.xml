@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/input_box_height"
+    android:layout_height="56dp"
     android:background="@color/main_color">
 
     <ImageView
         android:id="@+id/open_chat"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/input_box_height"
+        android:layout_height="56dp"
         android:layout_gravity="center"
-        android:foregroundGravity="center"
         android:background="?android:selectableItemBackground"
         android:contentDescription="@string/open_chat"
+        android:foregroundGravity="center"
         android:padding="@dimen/content_padding"
         android:src="@drawable/send_msg" />
 
