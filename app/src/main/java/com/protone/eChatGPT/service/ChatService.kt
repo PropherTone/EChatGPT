@@ -1,16 +1,13 @@
 package com.protone.eChatGPT.service
 
 import android.app.*
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
-import android.content.IntentFilter
 import android.os.Build
 import android.os.IBinder
 import android.widget.RemoteViews
 import com.protone.eChatGPT.R
-import com.protone.eChatGPT.activity.MainActivity
+import com.protone.eChatGPT.activity.ChatActivity
 import com.protone.eChatGPT.utils.getString
 import com.protone.eChatGPT.utils.intent
 
@@ -33,7 +30,7 @@ class ChatService : Service() {
             PendingIntent.getActivity(
                 context,
                 0,
-                MainActivity::class.intent,
+                ChatActivity::class.intent,
                 PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
             ).apply { it.setOnClickPendingIntent(R.id.open_chat, this) }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

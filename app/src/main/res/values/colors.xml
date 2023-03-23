@@ -4,8 +4,14 @@
     <color name="main_color_dark">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="white_transparent">#3DFFFFFF</color>
+    <color name="ripple_dark">#1F000000</color>
+
+    <color name="content_white">#F9F9F9</color>
+
     <color name="human_content">#FFFFFF</color>
     <color name="ai_content">#F9F9F9</color>
-    <color name="content_white">#F9F9F9</color>
+
     <color name="text_color">#222222</color>
+    <color name="text_color_light">#FFFFFF</color>
 </resources>

@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="content_padding">12dp</dimen>
-    <dimen name="content_text_size">18sp</dimen>
     <dimen name="chat_item_minH">64dp</dimen>
     <dimen name="input_box_height">56dp</dimen>
+
     <dimen name="content_elevation">4dp</dimen>
+
+    <dimen name="content_padding">12dp</dimen>
+    <dimen name="option_content_padding">8dp</dimen>
+
+    <dimen name="content_text_size">18sp</dimen>
+    <dimen name="option_elevation">2dp</dimen>
 </resources>

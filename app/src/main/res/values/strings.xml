@@ -7,4 +7,9 @@
     <string name="error">error</string>
     <string name="net_work_timeout">Network timeout</string>
     <string name="open_chat">Open chat</string>
+    <string name="open_setting">Open setting</string>
+    <string name="save">SAVE</string>
+    <string name="conversation">CONVERSATION</string>
+    <string name="describe_behavior">DESCRIBE BEHAVIOR</string>
+    <string name="describe_model_behavior">Describe model behavior</string>
 </resources>

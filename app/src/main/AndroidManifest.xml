@@ -19,7 +19,7 @@
         android:theme="@style/Theme.EChatGPT"
         tools:targetApi="31">
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".activity.ChatActivity"
             android:exported="true"
             android:launchMode="singleInstance">
             <intent-filter>
