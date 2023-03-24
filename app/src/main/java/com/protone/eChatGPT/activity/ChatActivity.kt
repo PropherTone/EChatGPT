@@ -1,6 +1,5 @@
 package com.protone.eChatGPT.activity
 
-import android.util.Log
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -42,6 +41,9 @@ class ChatActivity : BaseActivity<MainActivityBinding, ChatViewModel>() {
             linkInput(root, chatInputBox)
 
             chatList.init()
+            chatSave.setOnClickListener {
+                viewModel.saveConversation(chatListAdapter.getData())
+            }
             conversation.setOnClickListener {
                 viewModel.reverseIsConversation()
             }
@@ -77,6 +79,24 @@ class ChatActivity : BaseActivity<MainActivityBinding, ChatViewModel>() {
             } else {
                 binding.chatInputBox.hint = R.string.enter_message.getString()
                 R.dimen.option_elevation.getDimension()
+            }
+        }
+        saveState.observe(this@ChatActivity) {
+            when (it) {
+                ChatViewModel.SAVE_FAILED, ChatViewModel.SAVE_SUCCESS -> {
+                    (if (it == ChatViewModel.SAVE_SUCCESS) R.string.success.getString()
+                    else R.string.failed.getString()).toast()
+                    binding.saveState.isVisible = false
+                    R.dimen.option_elevation.getDimension().let { elevation ->
+                        binding.saveState.elevation = elevation
+                        binding.chatSave.elevation = elevation
+                    }
+                }
+                ChatViewModel.SAVING -> {
+                    binding.saveState.isVisible = true
+                    binding.saveState.elevation = 0f
+                    binding.chatSave.elevation = 0f
+                }
             }
         }
     }

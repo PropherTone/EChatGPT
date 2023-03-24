@@ -46,6 +46,7 @@ class ChatService : Service() {
                     setTicker("")
                     setSmallIcon(R.drawable.send_msg)
                     setCustomContentView(it)
+                    style = Notification.DecoratedCustomViewStyle()
                 }.build()
             } else Notification().apply {
                 icon = R.drawable.send_msg

@@ -1,15 +1,35 @@
 package com.protone.eChatGPT.utils
 
-import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.protone.eChatGPT.EApplication
-import kotlin.reflect.KClass
+import java.io.File
 
-val KClass<*>.intent: Intent
-    get() = Intent(EApplication.app, this.java)
+fun String.saveToFile(dir: String, fileName: String): String? {
+    val fileDir = File(dir)
+    if (!fileDir.isDirectory) return null
+    return fileDir.takeIf { if (!it.exists()) it.mkdirs() else true }?.let { dirFile ->
+        var path = "$dir${File.separator}$fileName"
+        path += "_" + dirFile.listFiles()?.let { listFiles ->
+            listFiles.count { childFile ->
+                childFile.path == path
+            }
+        }
+        val file = File(path)
+        if (file.exists()) file.delete()
+        file.takeIf { it.createNewFile() }?.let {
+            it.writeText(this)
+            path
+        }
+    }
+}
+
+fun String.toast() {
+    Toast.makeText(EApplication.app, this, Toast.LENGTH_SHORT).show()
+}
 
 fun Int.getString() = EApplication.app.getString(this)
 

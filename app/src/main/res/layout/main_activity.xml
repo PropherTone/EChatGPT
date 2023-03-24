@@ -84,6 +84,20 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/chat_system" />
 
+        <ProgressBar
+            android:id="@+id/save_state"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/main_color"
+            android:elevation="@dimen/content_elevation"
+            android:indeterminateTint="@color/white"
+            android:padding="@dimen/content_padding"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@id/chat_save"
+            app:layout_constraintEnd_toEndOf="@id/chat_save"
+            app:layout_constraintStart_toStartOf="@id/chat_save"
+            app:layout_constraintTop_toTopOf="@id/chat_save" />
+
         <TextView
             android:id="@+id/chat_system"
             android:layout_width="0dp"

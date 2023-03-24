@@ -7,10 +7,14 @@
 
         <TextView
             android:id="@+id/content"
-            android:textColor="@color/text_color"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/content_padding" />
+            android:textSize="18sp"
+            android:letterSpacing="0.048"
+            android:textStyle="bold"
+            android:background="?android:selectableItemBackground"
+            android:padding="@dimen/content_padding"
+            android:textColor="@color/text_color" />
 
     </FrameLayout>
 </layout>

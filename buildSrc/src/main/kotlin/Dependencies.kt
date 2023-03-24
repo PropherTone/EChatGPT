@@ -17,12 +17,14 @@ object DataBasePack {
     const val dataStore = "androidx.datastore:datastore-preferences:1.0.0"
 
     //ROOM数据库
-    private const val ROOM_VERSION = "2.5.0"
+    private const val ROOM_VERSION = "2.3.0"
     const val roomCompiler = "androidx.room:room-compiler:$ROOM_VERSION"
     const val roomKtx = "androidx.room:room-ktx:$ROOM_VERSION"
     const val roomRuntime = "androidx.room:room-runtime:$ROOM_VERSION"
+//    const val roomPaging = "androidx.room:room-paging:$ROOM_VERSION"
 }
 
 object Libs {
     const val gson = "com.google.code.gson:gson:2.10.1"
+    const val paging3 = "androidx.paging:paging-runtime:3.1.0"
 }

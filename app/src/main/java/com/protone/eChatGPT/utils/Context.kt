@@ -3,12 +3,18 @@ package com.protone.eChatGPT.utils
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
+import com.protone.eChatGPT.EApplication
+import kotlin.reflect.KClass
+
+val KClass<*>.intent: Intent
+    get() = Intent(EApplication.app, this.java)
 
 val Context.layoutInflater: LayoutInflater
     get() = LayoutInflater.from(this)

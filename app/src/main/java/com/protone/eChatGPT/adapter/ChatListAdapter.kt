@@ -1,5 +1,6 @@
 package com.protone.eChatGPT.adapter
 
+import android.graphics.Typeface
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
@@ -7,6 +8,7 @@ import com.protone.eChatGPT.R
 import com.protone.eChatGPT.bean.ChatItem
 import com.protone.eChatGPT.databinding.ChatItemLayoutBinding
 import com.protone.eChatGPT.utils.layoutInflater
+import java.util.concurrent.LinkedBlockingDeque
 
 class ChatListAdapter : Adapter<ViewBindingHolder<ChatItemLayoutBinding>>(),
     ChatHelper by ChatHelper.ChatHelperImp() {
@@ -54,10 +56,12 @@ class ChatListAdapter : Adapter<ViewBindingHolder<ChatItemLayoutBinding>>(),
                 ChatItem.ChatTarget.AI -> {
                     root.setBackgroundResource(R.color.ai_content)
                     root.elevation = 0f
+                    content.typeface = Typeface.DEFAULT
                 }
                 ChatItem.ChatTarget.HUMAN -> {
                     root.setBackgroundResource(R.color.human_content)
                     root.elevation = 2f
+                    content.typeface = Typeface.DEFAULT_BOLD
                 }
             }
             content.text = chatItem.content
@@ -68,11 +72,11 @@ class ChatListAdapter : Adapter<ViewBindingHolder<ChatItemLayoutBinding>>(),
 interface ChatHelper {
     class ChatHelperImp : ChatHelper {
         private lateinit var adapter: ChatListAdapter
-        private val chatList = mutableListOf<ChatItem>()
+        private val chatList = LinkedBlockingDeque<ChatItem>()
 
-        override fun getData(): MutableList<ChatItem> = chatList
+        override fun getData(): Collection<ChatItem> = chatList
 
-        override fun getChatItem(position: Int): ChatItem = chatList[position]
+        override fun getChatItem(position: Int): ChatItem = chatList.elementAt(position)
 
         override fun getListSize() = chatList.size
 
@@ -93,7 +97,7 @@ interface ChatHelper {
         }
     }
 
-    fun getData(): MutableList<ChatItem>
+    fun getData(): Collection<ChatItem>
 
     fun getChatItem(position: Int): ChatItem
 
