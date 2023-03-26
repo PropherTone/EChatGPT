@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.protone.eChatGPT.EApplication
+import kotlinx.coroutines.*
 import java.io.File
 
 fun String.saveToFile(dir: String, fileName: String): String? {
@@ -61,6 +62,19 @@ fun View.marginEnd(margin: Int) {
     val marginLayoutParams = layoutParams as ViewGroup.MarginLayoutParams
     marginLayoutParams.rightMargin = margin
     layoutParams = marginLayoutParams
+}
+
+suspend inline fun <T> onResult(
+    dispatcher: CoroutineDispatcher = Dispatchers.IO,
+    crossinline runnable: CoroutineScope.(CancellableContinuation<T>) -> Unit
+) = withContext(dispatcher) {
+    suspendCancellableCoroutine {
+        try {
+            runnable.invoke(this, it)
+        } catch (e: Exception) {
+            it.resumeWith(Result.failure(e))
+        }
+    }
 }
 
 inline fun doWithTimeout(

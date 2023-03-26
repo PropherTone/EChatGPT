@@ -11,26 +11,18 @@ import com.aallam.openai.api.chat.ChatMessage
 import com.aallam.openai.api.chat.ChatRole
 import com.aallam.openai.api.exception.OpenAIHttpException
 import com.aallam.openai.api.model.ModelId
-import com.protone.eChatGPT.EApplication
 import com.protone.eChatGPT.R
 import com.protone.eChatGPT.activity.TAG
-import com.protone.eChatGPT.bean.ChatHistory
 import com.protone.eChatGPT.bean.ChatItem
 import com.protone.eChatGPT.repository.OpenAiHelper
-import com.protone.eChatGPT.repository.dataBase.ChatDataBase
-import com.protone.eChatGPT.repository.dataBase.chatHistoryDAO
 import com.protone.eChatGPT.repository.userConfig
 import com.protone.eChatGPT.utils.*
 import kotlinx.coroutines.cancel
-import java.io.File
 
 class ChatViewModel : ViewModel() {
 
     companion object {
-        const val CONVERSATION_TIME_OUT = 100L
-        const val SAVE_SUCCESS = "SAVE_SUCCESS"
-        const val SAVING = "ON_SAVING"
-        const val SAVE_FAILED = "SAVE_FAILED"
+        const val CONVERSATION_TIME_OUT = 6000L
     }
 
     private val openAi: OpenAiHelper by lazy { OpenAiHelper(userConfig.token) }
@@ -40,9 +32,6 @@ class ChatViewModel : ViewModel() {
 
     private val _isSystem = MutableLiveData<Boolean>()
     val isSystem: LiveData<Boolean> get() = _isSystem
-
-    private val _saveState = MutableLiveData<String>()
-    val saveState: LiveData<String> get() = _saveState
 
     private val _conversationState by lazy { MutableLiveData<Boolean>() }
     val conversationState: LiveData<Boolean> get() = _conversationState
@@ -110,23 +99,6 @@ class ChatViewModel : ViewModel() {
             }
         }.invokeOnCompletion {
             _conversationState.postValue(false)
-        }
-    }
-
-    fun saveConversation(data: Collection<ChatItem>) {
-        _saveState.postValue(SAVING)
-        viewModelScope.launchIO {
-            data.listToJson(ChatItem::class.java).saveToFile(
-                "${EApplication.app.filesDir}${File.separator}",
-                "Chat-${System.currentTimeMillis()}"
-            )?.let {
-                chatHistoryDAO.insertChatHistory(ChatHistory(it, System.currentTimeMillis()))
-                _saveState.postValue(SAVE_SUCCESS)
-            } ?: _saveState.postValue(SAVE_FAILED)
-        }.invokeOnCompletion {
-            if (_saveState.value != SAVE_SUCCESS || _saveState.value != SAVE_FAILED) {
-                _saveState.postValue(SAVE_FAILED)
-            }
         }
     }
 

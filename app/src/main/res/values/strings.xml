@@ -14,4 +14,8 @@
     <string name="describe_model_behavior">Describe model behavior</string>
     <string name="success">Success</string>
     <string name="failed">Failed</string>
+    <string name="go_back">Go back</string>
+    <string name="enter_name">Enter name here</string>
+    <string name="name_conflict">Name conflict</string>
+    <string name="save_failed">Save failed</string>
 </resources>

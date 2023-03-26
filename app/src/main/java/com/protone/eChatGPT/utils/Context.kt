@@ -19,6 +19,20 @@ val KClass<*>.intent: Intent
 val Context.layoutInflater: LayoutInflater
     get() = LayoutInflater.from(this)
 
+val Context.isKeyboardActive
+    get() = (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).isActive
+
+fun Activity.hideKeyboard() {
+    val inputManager: InputMethodManager =
+        getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    if (inputManager.isActive) {
+        inputManager.hideSoftInputFromWindow(
+            window.decorView.windowToken,
+            InputMethodManager.HIDE_NOT_ALWAYS
+        )
+    }
+}
+
 @SuppressLint("ClickableViewAccessibility")
 fun Context.linkInput(target: View, input: View) {
     target.setOnTouchListener { _, _ ->

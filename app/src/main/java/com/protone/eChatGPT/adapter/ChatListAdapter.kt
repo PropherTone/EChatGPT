@@ -84,6 +84,11 @@ interface ChatHelper {
             this@ChatHelperImp.adapter = this
         }
 
+        override fun setList(list: Collection<ChatItem>) {
+            chatList.addAll(list)
+            adapter.notifyItemRangeInserted(0, chatList.size)
+        }
+
         override fun chatSent(chatItem: ChatItem) {
             chatList.add(chatItem)
             adapter.notifyItemInserted(chatList.size)
@@ -104,6 +109,8 @@ interface ChatHelper {
     fun getListSize(): Int
 
     fun ChatListAdapter.attach()
+
+    fun setList(list: Collection<ChatItem>)
 
     fun chatSent(chatItem: ChatItem)
 

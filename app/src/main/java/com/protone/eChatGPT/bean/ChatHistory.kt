@@ -6,11 +6,14 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class ChatHistory(
-    @ColumnInfo(name = "history_storage_path")
-    val path: String,
+    @PrimaryKey(autoGenerate = true)
+    val id: Long,
+    @ColumnInfo(name = "chat_history_group")
+    val group: String,
+    @ColumnInfo(name = "history")
+    val content: String,
     @ColumnInfo(name = "saved_date")
     val date: Long
 ) {
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0L
+    constructor(group: String, content: String, date: Long) : this(0L, group, content, date)
 }

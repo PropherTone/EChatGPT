@@ -39,14 +39,16 @@ class ChatService : Service() {
                     "ChatNotification",
                     NotificationManager.IMPORTANCE_LOW
                 )
+                channel.setShowBadge(false)
+                channel.enableLights(false)
                 createNotificationChannel(channel)
                 Notification.Builder(context, packageName).apply {
                     setOngoing(true)
                     setContentTitle(R.string.open_chat.getString())
+                    setAutoCancel(false)
                     setTicker("")
                     setSmallIcon(R.drawable.send_msg)
                     setCustomContentView(it)
-                    style = Notification.DecoratedCustomViewStyle()
                 }.build()
             } else Notification().apply {
                 icon = R.drawable.send_msg
@@ -54,7 +56,10 @@ class ChatService : Service() {
                 contentView = it
             }
         }.also {
-            it.flags = Notification.FLAG_NO_CLEAR
+            it.flags =
+                Notification.FLAG_NO_CLEAR or Notification.FLAG_ONGOING_EVENT or Notification.FLAG_FOREGROUND_SERVICE
+            it.visibility = Notification.VISIBILITY_PUBLIC
+            it.category = Notification.CATEGORY_TRANSPORT
         }
     }
 }

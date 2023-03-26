@@ -1,5 +1,6 @@
 package com.protone.eChatGPT.activity
 
+import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -8,22 +9,28 @@ import com.aallam.openai.api.BetaOpenAI
 import com.protone.eChatGPT.R
 import com.protone.eChatGPT.adapter.ChatListAdapter
 import com.protone.eChatGPT.bean.ChatItem
-import com.protone.eChatGPT.databinding.MainActivityBinding
+import com.protone.eChatGPT.databinding.ChatActivityBinding
+import com.protone.eChatGPT.messenger.EventMessenger
 import com.protone.eChatGPT.repository.userConfig
 import com.protone.eChatGPT.service.ChatService
 import com.protone.eChatGPT.utils.*
+import com.protone.eChatGPT.messenger.EventMessengerImp
+import com.protone.eChatGPT.messenger.event.ChatViewEvent
 import com.protone.eChatGPT.viewModel.ChatViewModel
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
-class ChatActivity : BaseActivity<MainActivityBinding, ChatViewModel>() {
+class ChatActivity : BaseActivity<ChatActivityBinding, ChatViewModel>(),
+    EventMessenger<ChatViewEvent> by EventMessengerImp() {
+
     override val viewModel: ChatViewModel by viewModels()
 
     private val chatListAdapter by lazy { ChatListAdapter() }
 
-    @OptIn(BetaOpenAI::class)
-    override fun createView(): MainActivityBinding {
-        return MainActivityBinding.inflate(layoutInflater).apply {
+    private var normalSaveViewHeight: Int = 0
+
+    override fun createView(): ChatActivityBinding {
+        return ChatActivityBinding.inflate(layoutInflater).apply {
             root.post {
                 var token = ""
                 if (userConfig.token.isEmpty()) showGetTokenPop(root) {
@@ -35,36 +42,18 @@ class ChatActivity : BaseActivity<MainActivityBinding, ChatViewModel>() {
             }
             chatInput.post {
                 chatList.marginBottom(root.measuredHeight - chatInputBox.y.roundToInt())
+                normalSaveViewHeight = binding.root.measuredHeight - binding.chatSave.y.roundToInt()
             }
 
             linkInput(chatList, chatInputBox)
             linkInput(root, chatInputBox)
 
             chatList.init()
-            chatSave.setOnClickListener {
-                viewModel.saveConversation(chatListAdapter.getData())
-            }
-            conversation.setOnClickListener {
-                viewModel.reverseIsConversation()
-            }
-            chatSystem.setOnClickListener {
-                viewModel.reverseIsSystem()
-            }
-            send.setOnClickListener {
-                val msg = chatInputBox.text.toString()
-                if (msg.isEmpty()) return@setOnClickListener
-                chatInputBox.text.clear()
-                viewModel.chat(msg = msg, chatList = chatListAdapter.getData()) { chatItem ->
-                    if (chatItem.target == ChatItem.ChatTarget.HUMAN) {
-                        launch { chatListAdapter.chatSent(chatItem) }
-                        return@chat
-                    }
-                    launch { chatListAdapter.receive(chatItem) }
-                }
-            }
+            initViewAction()
         }
     }
 
+    @OptIn(BetaOpenAI::class)
     override fun ChatViewModel.init() {
         conversationState.observe(this@ChatActivity) {
             binding.chatState.isVisible = it
@@ -81,21 +70,32 @@ class ChatActivity : BaseActivity<MainActivityBinding, ChatViewModel>() {
                 R.dimen.option_elevation.getDimension()
             }
         }
-        saveState.observe(this@ChatActivity) {
-            when (it) {
-                ChatViewModel.SAVE_FAILED, ChatViewModel.SAVE_SUCCESS -> {
-                    (if (it == ChatViewModel.SAVE_SUCCESS) R.string.success.getString()
-                    else R.string.failed.getString()).toast()
-                    binding.saveState.isVisible = false
-                    R.dimen.option_elevation.getDimension().let { elevation ->
-                        binding.saveState.elevation = elevation
-                        binding.chatSave.elevation = elevation
+        launchMain {
+            onEvent {
+                when (it) {
+                    is ChatViewEvent.OnSendMsg -> {
+                        if (it.msg.isEmpty()) return@onEvent
+                        binding.chatInputBox.text.clear()
+                        chat(msg = it.msg, chatList = chatListAdapter.getData()) { chatItem ->
+                            if (chatItem.target == ChatItem.ChatTarget.HUMAN) {
+                                launch { chatListAdapter.chatSent(chatItem) }
+                                return@chat
+                            }
+                            launch { chatListAdapter.receive(chatItem) }
+                        }
                     }
-                }
-                ChatViewModel.SAVING -> {
-                    binding.saveState.isVisible = true
-                    binding.saveState.elevation = 0f
-                    binding.chatSave.elevation = 0f
+                    ChatViewEvent.OnSave -> {
+                        binding.chatSave.elevation = 0f
+                        startSaveConversationActivityForResult(
+                            chatListAdapter.getData(),
+                            normalSaveViewHeight,
+                            binding.root.measuredHeight - binding.chatSave.y.roundToInt()
+                        ) {
+                            binding.chatSave.elevation = R.dimen.option_elevation.getDimension()
+                        }
+                    }
+                    ChatViewEvent.OnConversation -> reverseIsConversation()
+                    ChatViewEvent.OnSystem -> reverseIsSystem()
                 }
             }
         }
@@ -106,6 +106,21 @@ class ChatActivity : BaseActivity<MainActivityBinding, ChatViewModel>() {
             stackFromEnd = true
         }
         adapter = chatListAdapter
+    }
+
+    private fun ChatActivityBinding.initViewAction() {
+        chatSave.setOnClickListener {
+            send(ChatViewEvent.OnSave)
+        }
+        conversation.setOnClickListener {
+            send(ChatViewEvent.OnConversation)
+        }
+        chatSystem.setOnClickListener {
+            send(ChatViewEvent.OnSystem)
+        }
+        send.setOnClickListener {
+            send(ChatViewEvent.OnSendMsg(chatInputBox.text.toString()))
+        }
     }
 
 }

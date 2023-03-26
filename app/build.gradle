@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-android'
     id 'kotlin-kapt'
 }
 
@@ -37,9 +38,9 @@ android {
         dataBinding true
     }
 
-    configurations {
-        implementation.exclude group: 'org.jetbrains', module: 'annotations'
-    }
+//    configurations {
+//        implementation.exclude group: 'org.jetbrains', module: 'annotations'
+//    }
 
     packagingOptions {
         exclude 'META-INF/gradle/incremental.annotation.processors'
@@ -77,5 +78,5 @@ dependencies {
 
     implementation Libs.gson
     implementation Libs.paging3
-//    implementation DataBasePack.roomPaging
+    implementation DataBasePack.roomPaging
 }
