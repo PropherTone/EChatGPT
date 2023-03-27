@@ -88,8 +88,7 @@ class ChatActivity : BaseActivity<ChatActivityBinding, ChatViewModel>(),
                         binding.chatSave.elevation = 0f
                         startSaveConversationActivityForResult(
                             chatListAdapter.getData(),
-                            normalSaveViewHeight,
-                            binding.root.measuredHeight - binding.chatSave.y.roundToInt()
+                            normalSaveViewHeight
                         ) {
                             binding.chatSave.elevation = R.dimen.option_elevation.getDimension()
                         }

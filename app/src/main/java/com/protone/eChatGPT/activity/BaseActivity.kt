@@ -1,8 +1,11 @@
 package com.protone.eChatGPT.activity
 
+import android.app.Activity
 import android.content.Intent
+import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -36,7 +39,7 @@ abstract class BaseActivity<VB : ViewDataBinding, VM : ViewModel> : AppCompatAct
         super.onCreate(savedInstanceState)
         binding = createView().apply {
             setContentView(root)
-            if (savedInstanceState == null) root.post { viewModel.init() }
+            root.post { viewModel.init() }
         }
     }
 
@@ -52,11 +55,40 @@ abstract class BaseActivity<VB : ViewDataBinding, VM : ViewModel> : AppCompatAct
         pendingTransition?.let { overridePendingTransition(it.first, it.second) }
     }
 
+    var isKeyBroadShow = false
+    var onLayoutChangeListener: View.OnLayoutChangeListener? = null
+
+    inline fun setSoftInputStatusListener(crossinline onSoftInput: (Int, Boolean) -> Unit = { _, _ -> }) {
+        isKeyBroadShow = false
+        removeSoftInputStatusListener()
+        val rect = Rect()
+        val height = window.decorView.height
+        onLayoutChangeListener = View.OnLayoutChangeListener { v, _, _, _, _, _, _, _, _ ->
+            v.getWindowVisibleDisplayFrame(rect)
+            val i = height - rect.bottom
+            if (i > 0 && !isKeyBroadShow) {
+                isKeyBroadShow = true
+                onSoftInput.invoke(i, true)
+            } else if (i <= 0 && isKeyBroadShow) {
+                isKeyBroadShow = false
+                onSoftInput.invoke(i, false)
+            }
+        }
+        window.decorView.addOnLayoutChangeListener(onLayoutChangeListener)
+    }
+
+    fun removeSoftInputStatusListener() {
+        if (onLayoutChangeListener == null) return
+        window.decorView.removeOnLayoutChangeListener(onLayoutChangeListener)
+        onLayoutChangeListener = null
+    }
+
     open fun getSwapAnim(): Pair<Int, Int>? {
         return null
     }
 
     override fun finish() {
+        removeSoftInputStatusListener()
         super.finish()
         getSwapAnim()?.let {
             overridePendingTransition(it.first, it.second)
@@ -76,15 +108,15 @@ val gainData by lazy { GainData() }
 
 suspend inline fun BaseActivity<*, *>.startSaveConversationActivityForResult(
     chatList: Collection<ChatItem>,
-    itemNormalHeight: Int,
     itemHeight: Int,
     callback: (ActivityResult) -> Unit
 ) {
     gainData.put(SaveConversationActivity.CHAT_HISTORY, chatList)
     startActivityForResult(
-        SaveConversationActivity::class.intent
-            .putExtra(SaveConversationActivity.ITEM_NORMAL_HEIGHT, itemNormalHeight)
-            .putExtra(SaveConversationActivity.ITEM_HEIGHT, itemHeight),
+        SaveConversationActivity::class.intent.putExtra(
+            SaveConversationActivity.ITEM_HEIGHT,
+            itemHeight
+        ),
         Pair(R.anim.card_in_ltr, R.anim.card_out_ltr)
     )?.let {
         callback(it)

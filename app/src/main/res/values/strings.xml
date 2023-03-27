@@ -18,4 +18,7 @@
     <string name="enter_name">Enter name here</string>
     <string name="name_conflict">Name conflict</string>
     <string name="save_failed">Save failed</string>
+    <string name="delete">Delete</string>
+    <string name="confirm">confirm</string>
+    <string name="cancel">cancel</string>
 </resources>

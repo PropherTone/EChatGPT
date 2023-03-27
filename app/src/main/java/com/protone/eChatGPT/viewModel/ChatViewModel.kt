@@ -74,7 +74,6 @@ class ChatViewModel : ViewModel() {
                         )
                     ).bufferCollect { completionChunk ->
                         refreshTimer()
-                        Log.d(TAG, "chat: $completionChunk")
                         (item ?: ChatItem(
                             completionChunk.id,
                             ChatItem.ChatTarget.AI,

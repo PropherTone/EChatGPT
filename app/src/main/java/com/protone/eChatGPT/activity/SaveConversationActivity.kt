@@ -1,6 +1,7 @@
 package com.protone.eChatGPT.activity
 
 import android.animation.ObjectAnimator
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.protone.eChatGPT.R
 import com.protone.eChatGPT.adapter.ChatListAdapter
+import com.protone.eChatGPT.adapter.ChatListEditAdapter
 import com.protone.eChatGPT.bean.ChatItem
 import com.protone.eChatGPT.databinding.SaveChatActivityLayoutBinding
 import com.protone.eChatGPT.messenger.EventMessenger
@@ -24,26 +26,18 @@ class SaveConversationActivity : BaseActivity<SaveChatActivityLayoutBinding, Sav
     EventMessenger<SaveConversationEvent> by EventMessengerImp() {
 
     companion object {
-        const val ITEM_NORMAL_HEIGHT = "ITEM_NORMAL_HEIGHT"
         const val ITEM_HEIGHT = "ITEM_HEIGHT"
         const val CHAT_HISTORY = "CHAT_HISTORY"
     }
 
     override val viewModel: SaveChatViewModel by viewModels()
 
-    private val chatListAdapter by lazy { ChatListAdapter() }
+    private val chatListAdapter by lazy { ChatListEditAdapter() }
 
     override fun createView(): SaveChatActivityLayoutBinding {
         return SaveChatActivityLayoutBinding.inflate(layoutInflater).apply {
             save.updateLayoutParams {
                 height = intent.getIntExtra(ITEM_HEIGHT, height)
-            }
-            save.post {
-                if (!isKeyboardActive) {
-                    save.updateLayoutParams {
-                        height = intent.getIntExtra(ITEM_NORMAL_HEIGHT, height)
-                    }
-                }
             }
             chatList.init()
             back.setOnClickListener { send(SaveConversationEvent.Finish) }

@@ -14,8 +14,8 @@ fun String.saveToFile(dir: String, fileName: String): String? {
     if (!fileDir.isDirectory) return null
     return fileDir.takeIf { if (!it.exists()) it.mkdirs() else true }?.let { dirFile ->
         var path = "$dir${File.separator}$fileName"
-        path += "_" + dirFile.listFiles()?.let { listFiles ->
-            listFiles.count { childFile ->
+        path += dirFile.listFiles()?.let { listFiles ->
+            "_" + listFiles.count { childFile ->
                 childFile.path == path
             }
         }

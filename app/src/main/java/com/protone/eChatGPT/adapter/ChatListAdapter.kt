@@ -10,17 +10,18 @@ import com.protone.eChatGPT.databinding.ChatItemLayoutBinding
 import com.protone.eChatGPT.utils.layoutInflater
 import java.util.concurrent.LinkedBlockingDeque
 
-class ChatListAdapter : Adapter<ViewBindingHolder<ChatItemLayoutBinding>>(),
+open class ChatListAdapter : Adapter<ViewBindingHolder<ChatItemLayoutBinding>>(),
     ChatHelper by ChatHelper.ChatHelperImp() {
 
     init {
-        attach()
+
     }
 
     lateinit var rv: RecyclerView
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
+        attach()
         rv = recyclerView
     }
 
@@ -71,8 +72,12 @@ class ChatListAdapter : Adapter<ViewBindingHolder<ChatItemLayoutBinding>>(),
 
 interface ChatHelper {
     class ChatHelperImp : ChatHelper {
-        private lateinit var adapter: ChatListAdapter
-        private val chatList = LinkedBlockingDeque<ChatItem>()
+        private var adapter: ChatListAdapter? = null
+        private val chatList = mutableListOf<ChatItem>()
+
+        override fun ChatListAdapter.attach() {
+            this@ChatHelperImp.adapter = this
+        }
 
         override fun getData(): Collection<ChatItem> = chatList
 
@@ -80,27 +85,39 @@ interface ChatHelper {
 
         override fun getListSize() = chatList.size
 
-        override fun ChatListAdapter.attach() {
-            this@ChatHelperImp.adapter = this
+        override fun setList(list: Collection<ChatItem>) {
+            adapter?.run {
+                chatList.addAll(list)
+                notifyItemRangeInserted(0, chatList.size)
+            }
         }
 
-        override fun setList(list: Collection<ChatItem>) {
-            chatList.addAll(list)
-            adapter.notifyItemRangeInserted(0, chatList.size)
+        override fun remove(chatItem: ChatItem) {
+            chatList.remove(chatItem)
+        }
+
+        override fun remove(position: Int) {
+            chatList.removeAt(position)
         }
 
         override fun chatSent(chatItem: ChatItem) {
-            chatList.add(chatItem)
-            adapter.notifyItemInserted(chatList.size)
-            adapter.rv.scrollToPosition(chatList.size - 1)
+            adapter?.run {
+                chatList.add(chatItem)
+                notifyItemInserted(chatList.size)
+                rv.scrollToPosition(chatList.size - 1)
+            }
         }
 
         override fun receive(chatItem: ChatItem) {
-            val index = chatList.indexOfFirst { it.id == chatItem.id }
-            if (index == -1) chatSent(chatItem)
-            else adapter.notifyItemChanged(index, "Content-Changed")
+            adapter?.run {
+                val index = chatList.indexOfFirst { it.id == chatItem.id }
+                if (index == -1) chatSent(chatItem)
+                else notifyItemChanged(index, "Content-Changed")
+            }
         }
     }
+
+    fun ChatListAdapter.attach()
 
     fun getData(): Collection<ChatItem>
 
@@ -108,9 +125,11 @@ interface ChatHelper {
 
     fun getListSize(): Int
 
-    fun ChatListAdapter.attach()
-
     fun setList(list: Collection<ChatItem>)
+
+    fun remove(chatItem: ChatItem)
+
+    fun remove(position: Int)
 
     fun chatSent(chatItem: ChatItem)
 
