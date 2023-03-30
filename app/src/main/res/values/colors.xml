@@ -5,6 +5,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="red">#FF4242</color>
+    <color name="red_smooth">#FF5A5A</color>
     <color name="white_transparent">#3DFFFFFF</color>
     <color name="ripple_dark">#1F000000</color>
 

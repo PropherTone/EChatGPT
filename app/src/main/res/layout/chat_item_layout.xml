@@ -1,20 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/content"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:letterSpacing="0.048"
-            android:textStyle="bold"
             android:background="?android:selectableItemBackground"
+            android:letterSpacing="0.048"
             android:padding="@dimen/content_padding"
-            android:textColor="@color/text_color" />
+            android:textColor="@color/text_color"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/details"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </FrameLayout>
+        <TextView
+            android:id="@+id/state"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/option_content_padding"
+            android:text="@string/etc"
+            android:textColor="@color/text_color"
+            android:textSize="18sp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toStartOf="@id/retry"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/content" />
+
+        <ImageButton
+            android:id="@+id/details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/white_transparent"
+            android:contentDescription="@string/retry"
+            android:padding="@dimen/option_content_padding"
+            android:src="@drawable/analytics_dark"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/retry"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/content" />
+
+        <ImageButton
+            android:id="@+id/retry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/white_transparent"
+            android:contentDescription="@string/retry"
+            android:padding="@dimen/option_content_padding"
+            android:src="@drawable/auto_renew_dark"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/content" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

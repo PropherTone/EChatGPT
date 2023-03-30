@@ -5,9 +5,12 @@
 
     <dimen name="content_elevation">4dp</dimen>
 
+    <dimen name="option_content_margin">4dp</dimen>
     <dimen name="content_padding">12dp</dimen>
     <dimen name="option_content_padding">8dp</dimen>
+    <dimen name="option_content_text_padding">4dp</dimen>
 
+    <dimen name="option_content_text_size">12sp</dimen>
     <dimen name="content_text_size">18sp</dimen>
     <dimen name="option_elevation">2dp</dimen>
 </resources>

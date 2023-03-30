@@ -4,11 +4,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.protone.eChatGPT.EApplication
 import com.protone.eChatGPT.bean.ChatHistory
 import com.protone.eChatGPT.bean.ChatItem
 import com.protone.eChatGPT.repository.dataBase.chatHistoryDAO
 import com.protone.eChatGPT.utils.launchIO
+import com.protone.eChatGPT.utils.listToJson
+import com.protone.eChatGPT.utils.saveToFile
 import com.protone.eChatGPT.utils.toJson
+import kotlinx.coroutines.flow.flow
 
 class SaveChatViewModel : ViewModel() {
 
@@ -29,11 +33,11 @@ class SaveChatViewModel : ViewModel() {
                 _saveState.postValue(NAME_CONFLICT)
                 return@saveJob
             }
-            val millis = System.currentTimeMillis()
-            data.map {
-                ChatHistory(name, it.toJson(), millis)
-            }.let {
-                chatHistoryDAO.insertChatHistories(it)
+            EApplication.app.filesDir?.absolutePath?.let { dir ->
+                data.listToJson(ChatItem::class.java).saveToFile(dir, name)
+                ChatHistory(name, dir, System.currentTimeMillis())
+            }?.let {
+                chatHistoryDAO.insertChatHistory(it)
             }
             _saveState.postValue(SAVE_SUCCESS)
         }.invokeOnCompletion {

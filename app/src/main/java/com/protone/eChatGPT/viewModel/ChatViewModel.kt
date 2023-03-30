@@ -1,6 +1,5 @@
 package com.protone.eChatGPT.viewModel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,10 +8,7 @@ import com.aallam.openai.api.BetaOpenAI
 import com.aallam.openai.api.chat.ChatCompletionRequest
 import com.aallam.openai.api.chat.ChatMessage
 import com.aallam.openai.api.chat.ChatRole
-import com.aallam.openai.api.exception.OpenAIHttpException
 import com.aallam.openai.api.model.ModelId
-import com.protone.eChatGPT.R
-import com.protone.eChatGPT.activity.TAG
 import com.protone.eChatGPT.bean.ChatItem
 import com.protone.eChatGPT.repository.OpenAiHelper
 import com.protone.eChatGPT.repository.userConfig
@@ -36,10 +32,6 @@ class ChatViewModel : ViewModel() {
     private val _conversationState by lazy { MutableLiveData<Boolean>() }
     val conversationState: LiveData<Boolean> get() = _conversationState
 
-    private var chatId = -1
-
-    private fun getChatId() = --chatId
-
     fun reverseIsSystem() {
         _isSystem.postValue(!(_isSystem.value ?: false))
     }
@@ -59,53 +51,31 @@ class ChatViewModel : ViewModel() {
         _conversationState.postValue(true)
         viewModelScope.launchDefault chatJob@{
             val system = isSystem.value ?: false
-            callBack(getUserChatItem(system, msg))
+            val userChatItem = getUserChatItem(system, msg)
+            callBack(userChatItem)
             if (system) {
                 reverseIsSystem()
                 return@chatJob
             }
-            var item: ChatItem? = null
-            try {
-                doWithTimeout(timeoutMills = CONVERSATION_TIME_OUT, func = { refreshTimer ->
-                    openAi.chat(
-                        ChatCompletionRequest(
-                            model = ModelId("gpt-3.5-turbo"),
-                            generateChatMessages(chatList, chatRole, msg)
-                        )
-                    ).bufferCollect { completionChunk ->
-                        refreshTimer()
-                        (item ?: ChatItem(
-                            completionChunk.id,
-                            ChatItem.ChatTarget.AI,
-                            System.currentTimeMillis().toString()
-                        ).also { item = it }).let { chatItem ->
-                            chatItem.content = completionChunk.choices.joinToString { chunk ->
-                                chunk.delta?.content ?: ""
-                            }
-                            callBack(chatItem)
-                        }
-                    }
-                }) { cancel() }
-            } catch (e: OpenAIHttpException) {
-                callBack(
-                    ChatItem(
-                        getChatId().toString(),
-                        ChatItem.ChatTarget.AI,
-                        R.string.net_work_timeout.getString(),
-                        System.currentTimeMillis().toString()
-                    )
-                )
-            }
+            openAi.chat(
+                userChatItem.id,
+                ChatCompletionRequest(
+                    model = ModelId("gpt-3.5-turbo"),
+                    generateChatMessages(chatList, chatRole, msg)
+                ),
+                CONVERSATION_TIME_OUT,
+                onTimeout = { cancel() }
+            ) { callBack(it) }
         }.invokeOnCompletion {
             _conversationState.postValue(false)
         }
     }
 
     private fun getUserChatItem(isSystem: Boolean, msg: String) = ChatItem(
-        getChatId().toString(),
+        openAi.getChatId().toString(),
         ChatItem.ChatTarget.HUMAN.also { it.isSystem = isSystem },
         msg,
-        System.currentTimeMillis().toString()
+        System.currentTimeMillis()
     )
 
     @OptIn(BetaOpenAI::class)

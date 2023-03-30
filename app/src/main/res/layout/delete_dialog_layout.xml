@@ -4,37 +4,53 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:background="@color/white">
 
         <TextView
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:elevation="@dimen/content_elevation"
             android:gravity="center"
             android:letterSpacing="0.1"
             android:padding="@dimen/content_padding"
             android:text="@string/delete"
+            android:textColor="@color/text_color"
             android:textSize="@dimen/content_text_size"
             android:textStyle="bold"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/confirm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/main_color"
             android:gravity="center"
-            android:padding="@dimen/option_content_padding"
+            android:letterSpacing="0.08"
             android:text="@string/confirm"
+            android:textColor="@color/white"
+            app:backgroundTint="@color/main_color"
             app:layout_constraintTop_toBottomOf="@id/title" />
 
-        <TextView
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/cancel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/red_smooth"
             android:gravity="center"
-            android:padding="@dimen/option_content_padding"
+            android:letterSpacing="0.08"
             android:text="@string/cancel"
+            android:textColor="@color/white"
+            app:backgroundTint="@color/red_smooth"
             app:layout_constraintTop_toBottomOf="@id/confirm" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/content_padding"
+            android:elevation="@dimen/content_elevation"
+            app:layout_constraintTop_toBottomOf="@id/cancel" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

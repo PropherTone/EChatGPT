@@ -19,6 +19,11 @@
     <string name="name_conflict">Name conflict</string>
     <string name="save_failed">Save failed</string>
     <string name="delete">Delete</string>
-    <string name="confirm">confirm</string>
-    <string name="cancel">cancel</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+    <string name="retry">Retry</string>
+    <string name="etc">…</string>
+    <string name="total_token_count">Total tokens : %s</string>
+    <string name="prompt_token_count">Prompt token : %s</string>
+    <string name="completion_token_count">Completion token : %s</string>
 </resources>

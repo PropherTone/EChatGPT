@@ -34,7 +34,6 @@ abstract class BaseActivity<VB : ViewDataBinding, VM : ViewModel> : AppCompatAct
     val code = AtomicInteger(0)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         setTransparentClipStatusBar(AppCompatDelegate.getDefaultNightMode() == MODE_NIGHT_YES)
         super.onCreate(savedInstanceState)
         binding = createView().apply {
