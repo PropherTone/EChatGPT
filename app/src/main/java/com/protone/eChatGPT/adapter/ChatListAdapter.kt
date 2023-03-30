@@ -86,11 +86,17 @@ open class ChatListAdapter : Adapter<ViewBindingHolder<ChatItemLayoutBinding>>()
                     root.setBackgroundResource(R.color.human_content)
                     root.elevation = 2f
                     content.typeface = Typeface.DEFAULT_BOLD
+                    state.isGone = true
+                    details.isGone = true
+                    retry.isGone = true
                 }
             }
             content.text = chatItem.content
             root.setOnLongClickListener {
                 true
+            }
+            retry.setOnClickListener {
+
             }
             details.setOnClickListener {
                 val detailLayoutBinding =

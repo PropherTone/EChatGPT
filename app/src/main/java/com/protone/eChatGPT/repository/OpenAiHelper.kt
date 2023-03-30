@@ -1,5 +1,6 @@
 package com.protone.eChatGPT.repository
 
+import android.util.Log
 import com.aallam.openai.api.BetaOpenAI
 import com.aallam.openai.api.chat.ChatCompletionRequest
 import com.aallam.openai.api.exception.OpenAIHttpException
@@ -51,6 +52,7 @@ class OpenAiHelper {
                             ChatItem.ChatTarget.AI,
                             System.currentTimeMillis()
                         ).also { item = it }).let { chatItem ->
+                            Log.d("TAG", "chat: $completionChunk")
                             chatItem.addUsage(completionChunk.usage)
                             chatItem.content = completionChunk.choices.joinToString { chunk ->
                                 chatItem.chatTag = ChatItem.ChatTag(chunk.finishReason ?: "")
