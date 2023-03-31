@@ -8,6 +8,8 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+
     <application
         android:name=".EApplication"
         android:allowBackup="true"
@@ -19,7 +21,7 @@
         android:theme="@style/Theme.EChatGPT"
         tools:targetApi="31">
         <activity
-            android:name=".activity.ChatActivity"
+            android:name=".mods.chat.ChatActivity"
             android:exported="true"
             android:launchMode="singleInstance">
             <intent-filter>
@@ -28,7 +30,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.SaveConversationActivity" />
         <service android:name=".service.ChatService" />
     </application>
 

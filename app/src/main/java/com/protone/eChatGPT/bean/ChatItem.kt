@@ -57,7 +57,7 @@ data class ChatItem(val id: String, val target: ChatTarget, val time: Long) {
         }
 
     override fun toString(): String {
-        return "ChatItem(id='$id', target=$target, time='$time', content=$content)"
+        return "ChatItem(id='$id', target=$target, time=$time, sb=$sb, content=$content, usage=$usage, chatTag=$chatTag)"
     }
 
     data class TokenUsage(var total: Int, var prompt: Int, var completion: Int)

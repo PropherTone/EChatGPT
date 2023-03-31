@@ -17,6 +17,8 @@ inline fun Context.showGetTokenPop(decorView: View, crossinline callBack: (CharS
         pop.isFocusable = true
         pop.isOutsideTouchable = false
         pop.isClippingEnabled = false
+        pop.elevation = 0f
+        pop.setBackgroundDrawable(null)
         pop.width = decorView.measuredWidth
         pop.height = decorView.measuredHeight
         pop.showAtLocation(decorView, Gravity.TOP, 0, 0)

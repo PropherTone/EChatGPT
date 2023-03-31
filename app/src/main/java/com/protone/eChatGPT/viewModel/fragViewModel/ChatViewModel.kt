@@ -1,4 +1,4 @@
-package com.protone.eChatGPT.viewModel
+package com.protone.eChatGPT.viewModel.fragViewModel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

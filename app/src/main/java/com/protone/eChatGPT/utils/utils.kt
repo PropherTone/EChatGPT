@@ -2,10 +2,12 @@ package com.protone.eChatGPT.utils
 
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.protone.eChatGPT.EApplication
+import com.protone.eChatGPT.mods.TAG
 import kotlinx.coroutines.*
 import java.io.File
 
@@ -77,14 +79,23 @@ suspend inline fun <T> onResult(
     }
 }
 
+inline fun tryWithCatch(catch: (Exception) -> Unit = {}, func: () -> Unit) {
+    try {
+        func()
+    } catch (e: Exception) {
+        catch(e)
+    }
+}
+
 inline fun doWithTimeout(
     timeoutMills: Long = 3000L,
     func: (() -> Unit) -> Unit,
     crossinline onTimeout: () -> Unit
 ) {
     val handler = Handler(Looper.getMainLooper()) {
+        Log.d(TAG, "doWithTimeout: ")
         onTimeout()
-        false
+        true
     }
     val refreshTimer = {
         handler.removeMessages(0)

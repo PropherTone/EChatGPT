@@ -14,7 +14,7 @@
             android:background="@drawable/input_box_rectangle"
             android:hint="@string/enter_token"
             android:importantForAutofill="no"
-            android:inputType="textNoSuggestions"
+            android:inputType="text"
             android:padding="@dimen/content_padding"
             android:textSize="@dimen/content_text_size"
             app:layout_constraintBottom_toTopOf="@id/confirm_btn"

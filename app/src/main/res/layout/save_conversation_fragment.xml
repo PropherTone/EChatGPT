@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/chat_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/name"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/state"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/main_color"
+            app:layout_constraintBottom_toBottomOf="@id/save"
+            app:layout_constraintEnd_toEndOf="@id/save"
+            app:layout_constraintStart_toStartOf="@id/name"
+            app:layout_constraintTop_toTopOf="@id/name" />
+
+        <EditText
+            android:id="@+id/name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:hint="@string/enter_name"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            android:padding="@dimen/content_padding"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/content_text_size"
+            app:layout_constraintBottom_toTopOf="@id/save"
+            app:layout_constraintEnd_toStartOf="@id/back"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/white_background_ripple"
+            android:contentDescription="@string/go_back"
+            android:elevation="@dimen/content_elevation"
+            android:padding="@dimen/content_padding"
+            android:src="@drawable/arrow_right_dark"
+            app:layout_constraintBottom_toTopOf="@id/save"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/name" />
+
+        <TextView
+            android:id="@+id/save"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:selectableItemBackground"
+            android:gravity="center"
+            android:padding="@dimen/content_padding"
+            android:text="@string/save"
+            android:textColor="@color/white"
+            android:textSize="@dimen/content_text_size"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <ProgressBar
+            android:id="@+id/save_progress"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/main_color"
+            android:indeterminateTint="@color/white"
+            android:padding="@dimen/content_padding"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@id/save"
+            app:layout_constraintEnd_toEndOf="@id/save"
+            app:layout_constraintStart_toStartOf="@id/save"
+            app:layout_constraintTop_toTopOf="@id/save" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

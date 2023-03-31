@@ -8,6 +8,7 @@ import com.aallam.openai.client.OpenAI
 import com.aallam.openai.client.OpenAIConfig
 import com.protone.eChatGPT.R
 import com.protone.eChatGPT.bean.ChatItem
+import com.protone.eChatGPT.mods.TAG
 import com.protone.eChatGPT.utils.bufferCollect
 import com.protone.eChatGPT.utils.doWithTimeout
 import com.protone.eChatGPT.utils.getString
@@ -41,10 +42,10 @@ class OpenAiHelper {
         callBack: (ChatItem) -> Unit
     ) {
         var item: ChatItem? = null
-        try {
-            doWithTimeout(
-                timeoutMills = timeout,
-                func = { refreshTimer ->
+        doWithTimeout(
+            timeoutMills = timeout,
+            func = { refreshTimer ->
+                try {
                     api.chatCompletions(chatCompletionRequest).bufferCollect { completionChunk ->
                         refreshTimer()
                         (item ?: ChatItem(
@@ -61,21 +62,21 @@ class OpenAiHelper {
                             callBack(chatItem)
                         }
                     }
-                }, onTimeout
-            )
-        } catch (e: OpenAIHttpException) {
-            callBack(
-                item ?: ChatItem(
-                    getChatId().toString(),
-                    ChatItem.ChatTarget.AI,
-                    System.currentTimeMillis()
-                ).also {
-                    it.content =
-                        "${if (it.content.isEmpty()) "" else "/n"}${R.string.net_work_timeout.getString()}"
-                    it.chatTag = ChatItem.ChatTag.NetworkError
+                } catch (e: OpenAIHttpException) {
+                    callBack(
+                        item ?: ChatItem(
+                            getChatId().toString(),
+                            ChatItem.ChatTarget.AI,
+                            System.currentTimeMillis()
+                        ).also {
+                            it.content =
+                                "${if (it.content.isEmpty()) "" else "/n"}${R.string.net_work_timeout.getString()}"
+                            it.chatTag = ChatItem.ChatTag.NetworkError
+                        }
+                    )
                 }
-            )
-        }
+            }, onTimeout
+        )
     }
 
 }

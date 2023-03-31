@@ -1,6 +1,7 @@
 package com.protone.eChatGPT.adapter
 
 import androidx.appcompat.app.AlertDialog
+import com.protone.eChatGPT.bean.ChatItem
 import com.protone.eChatGPT.databinding.ChatItemLayoutBinding
 import com.protone.eChatGPT.databinding.DeleteDialogLayoutBinding
 import com.protone.eChatGPT.utils.layoutInflater
@@ -25,4 +26,7 @@ class ChatListEditAdapter : ChatListAdapter() {
             }
         }
     }
+
+    override fun ChatItemLayoutBinding.aiAppearanceConfiguration(chatItem: ChatItem) = Unit
+
 }

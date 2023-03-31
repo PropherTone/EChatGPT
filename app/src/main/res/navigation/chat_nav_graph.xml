@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/chat_nav_graph"
+    app:startDestination="@id/chatFragment">
+
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.protone.eChatGPT.mods.chat.fragment.ChatFragment"
+        android:label="ChatFragment" >
+        <action
+            android:id="@+id/action_chatFragment_to_saveConversationActivity"
+            app:destination="@id/saveConversationActivity"
+            app:enterAnim="@anim/card_in_ltr"
+            app:exitAnim="@anim/card_out_ltr"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@anim/card_in_rtl"
+            app:popExitAnim="@anim/card_out_rtl" />
+    </fragment>
+    <fragment
+        android:id="@+id/saveConversationActivity"
+        android:name="com.protone.eChatGPT.mods.chat.fragment.SaveConversationFragment"
+        android:label="SaveConversationActivity" />
+</navigation>

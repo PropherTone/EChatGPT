@@ -5,16 +5,18 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?android:selectableItemBackground"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/content"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="?android:selectableItemBackground"
+            android:focusable="true"
             android:letterSpacing="0.048"
             android:padding="@dimen/content_padding"
             android:textColor="@color/text_color"
+            android:textIsSelectable="true"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@id/details"

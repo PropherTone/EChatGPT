@@ -6,11 +6,15 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Rect
+import android.net.Uri
 import android.os.Build
+import android.os.PowerManager
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import com.protone.eChatGPT.EApplication
@@ -27,6 +31,16 @@ val Context.isKeyboardActive
 
 fun Activity.hideKeyboard() {
     WindowCompat.getInsetsController(window, window.decorView).hide(WindowInsetsCompat.Type.ime())
+}
+
+@SuppressLint("BatteryLife")
+fun Context.requestBackgroundAlive() {
+    val packageName = applicationContext.packageName
+    val manager = getSystemService(AppCompatActivity.POWER_SERVICE) as PowerManager
+    if (!manager.isIgnoringBatteryOptimizations(packageName)) startActivity(Intent().apply {
+        action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+        data = Uri.parse("package:$packageName")
+    })
 }
 
 @SuppressLint("ClickableViewAccessibility")

@@ -75,8 +75,11 @@ dependencies {
     kapt DataBasePack.roomCompiler
     implementation DataBasePack.roomKtx
     implementation DataBasePack.roomRuntime
+    implementation DataBasePack.roomPaging
+
+    implementation NavigationPack.navigationFragment
+    implementation NavigationPack.navigationUI
 
     implementation Libs.gson
     implementation Libs.paging3
-    implementation DataBasePack.roomPaging
 }

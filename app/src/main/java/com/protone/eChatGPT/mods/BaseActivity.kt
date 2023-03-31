@@ -1,10 +1,8 @@
-package com.protone.eChatGPT.activity
+package com.protone.eChatGPT.mods
 
-import android.app.Activity
 import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -13,10 +11,12 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModel
-import com.protone.eChatGPT.R
-import com.protone.eChatGPT.bean.ChatItem
-import com.protone.eChatGPT.utils.*
-import kotlinx.coroutines.*
+import com.protone.eChatGPT.utils.onResult
+import com.protone.eChatGPT.utils.setTransparentClipStatusBar
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
 import java.util.concurrent.atomic.AtomicInteger
 
 const val TAG = "EChatGPT_TAG"
@@ -100,24 +100,5 @@ abstract class BaseActivity<VB : ViewDataBinding, VM : ViewModel> : AppCompatAct
         } finally {
             super.onDestroy()
         }
-    }
-}
-
-val gainData by lazy { GainData() }
-
-suspend inline fun BaseActivity<*, *>.startSaveConversationActivityForResult(
-    chatList: Collection<ChatItem>,
-    itemHeight: Int,
-    callback: (ActivityResult) -> Unit
-) {
-    gainData.put(SaveConversationActivity.CHAT_HISTORY, chatList)
-    startActivityForResult(
-        SaveConversationActivity::class.intent.putExtra(
-            SaveConversationActivity.ITEM_HEIGHT,
-            itemHeight
-        ),
-        Pair(R.anim.card_in_ltr, R.anim.card_out_ltr)
-    )?.let {
-        callback(it)
     }
 }

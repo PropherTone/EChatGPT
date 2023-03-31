@@ -1,27 +1,67 @@
 package com.protone.eChatGPT.service
 
 import android.app.*
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Build
 import android.os.IBinder
 import android.widget.RemoteViews
+import androidx.core.app.NotificationCompat
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.protone.eChatGPT.EApplication
 import com.protone.eChatGPT.R
-import com.protone.eChatGPT.activity.ChatActivity
+import com.protone.eChatGPT.mods.chat.ChatActivity
 import com.protone.eChatGPT.utils.getString
 import com.protone.eChatGPT.utils.intent
+import com.protone.eChatGPT.utils.tryWithCatch
 
 class ChatService : Service() {
+
+    companion object {
+        const val DISMISS_ACTION = "NOTIFICATION_DISMISSED"
+    }
+
+    private val notificationBroadcastReceiver by lazy {
+        LocalBroadcastManager.getInstance(EApplication.app)
+    }
+
+    private val notificationReceiver by lazy {
+        object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                intent?.takeIf { it.action == DISMISS_ACTION }?.let { notify() }
+            }
+        }
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        tryWithCatch {
+            notificationBroadcastReceiver.registerReceiver(
+                notificationReceiver,
+                IntentFilter(DISMISS_ACTION)
+            )
+        }
+    }
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        val manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        val notification = manager.initNotification(this)
-        startForeground(0x01, notification.apply { manager.notify(0x01, this) })
+        tryWithCatch { startForeground(0x01, notify()) }
         return super.onStartCommand(intent, flags, startId)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        tryWithCatch { notificationBroadcastReceiver.unregisterReceiver(notificationReceiver) }
+    }
+
+    private fun Context.notify(): Notification {
+        val manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        return manager.initNotification(this).apply { manager.notify(0x01, this) }
     }
 
     @Suppress("DEPRECATION")
@@ -45,9 +85,19 @@ class ChatService : Service() {
                 Notification.Builder(context, packageName).apply {
                     setOngoing(true)
                     setContentTitle(R.string.open_chat.getString())
-                    setAutoCancel(false)
+                    setAutoCancel(true)
                     setTicker("")
+                    setUsesChronometer(true)
+                    setBadgeIconType(NotificationCompat.BADGE_ICON_SMALL)
                     setSmallIcon(R.drawable.send_msg)
+                    setDeleteIntent(
+                        PendingIntent.getBroadcast(
+                            this@ChatService,
+                            1,
+                            Intent(DISMISS_ACTION),
+                            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                        )
+                    )
                     setCustomContentView(it)
                 }.build()
             } else Notification().apply {

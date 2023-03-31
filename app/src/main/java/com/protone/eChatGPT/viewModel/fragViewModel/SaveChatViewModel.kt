@@ -1,4 +1,4 @@
-package com.protone.eChatGPT.viewModel
+package com.protone.eChatGPT.viewModel.fragViewModel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,8 +11,6 @@ import com.protone.eChatGPT.repository.dataBase.chatHistoryDAO
 import com.protone.eChatGPT.utils.launchIO
 import com.protone.eChatGPT.utils.listToJson
 import com.protone.eChatGPT.utils.saveToFile
-import com.protone.eChatGPT.utils.toJson
-import kotlinx.coroutines.flow.flow
 
 class SaveChatViewModel : ViewModel() {
 

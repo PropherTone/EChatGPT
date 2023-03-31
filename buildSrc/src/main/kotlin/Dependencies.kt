@@ -28,3 +28,9 @@ object Libs {
     const val gson = "com.google.code.gson:gson:2.10.1"
     const val paging3 = "androidx.paging:paging-runtime:3.1.0"
 }
+
+object NavigationPack {
+    private const val NAVIGATION_VERSION = "2.5.3"
+    const val navigationFragment = "androidx.navigation:navigation-fragment-ktx:$NAVIGATION_VERSION"
+    const val navigationUI = "androidx.navigation:navigation-ui-ktx:$NAVIGATION_VERSION"
+}

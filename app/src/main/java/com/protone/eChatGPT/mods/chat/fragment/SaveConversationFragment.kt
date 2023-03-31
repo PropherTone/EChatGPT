@@ -1,43 +1,42 @@
-package com.protone.eChatGPT.activity
+package com.protone.eChatGPT.mods.chat.fragment
 
 import android.animation.ObjectAnimator
-import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.viewModels
+import androidx.annotation.ColorRes
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.protone.eChatGPT.R
-import com.protone.eChatGPT.adapter.ChatListAdapter
-import com.protone.eChatGPT.adapter.ChatListEditAdapter
-import com.protone.eChatGPT.bean.ChatItem
-import com.protone.eChatGPT.databinding.SaveChatActivityLayoutBinding
+import com.protone.eChatGPT.mods.BaseFragment
+import com.protone.eChatGPT.databinding.SaveConversationFragmentBinding
 import com.protone.eChatGPT.messenger.EventMessenger
 import com.protone.eChatGPT.messenger.EventMessengerImp
 import com.protone.eChatGPT.messenger.event.SaveConversationEvent
 import com.protone.eChatGPT.utils.getString
-import com.protone.eChatGPT.utils.isKeyboardActive
 import com.protone.eChatGPT.utils.launchMain
-import com.protone.eChatGPT.viewModel.SaveChatViewModel
+import com.protone.eChatGPT.viewModel.activityViewModel.ChatModViewModel
+import com.protone.eChatGPT.viewModel.fragViewModel.SaveChatViewModel
 
-class SaveConversationActivity : BaseActivity<SaveChatActivityLayoutBinding, SaveChatViewModel>(),
+class SaveConversationFragment :
+    BaseFragment<SaveConversationFragmentBinding, SaveChatViewModel, ChatModViewModel>(),
     EventMessenger<SaveConversationEvent> by EventMessengerImp() {
 
-    companion object {
-        const val ITEM_HEIGHT = "ITEM_HEIGHT"
-        const val CHAT_HISTORY = "CHAT_HISTORY"
-    }
-
     override val viewModel: SaveChatViewModel by viewModels()
+    override val activityViewModel: ChatModViewModel by activityViewModels()
 
-    private val chatListAdapter by lazy { ChatListEditAdapter() }
-
-    override fun createView(): SaveChatActivityLayoutBinding {
-        return SaveChatActivityLayoutBinding.inflate(layoutInflater).apply {
+    override fun createView(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): SaveConversationFragmentBinding {
+        return SaveConversationFragmentBinding.inflate(inflater, container, false).apply {
             save.updateLayoutParams {
-                height = intent.getIntExtra(ITEM_HEIGHT, height)
+                height = activityViewModel.normalSaveViewHeight
             }
             chatList.init()
             back.setOnClickListener { send(SaveConversationEvent.Finish) }
@@ -46,27 +45,24 @@ class SaveConversationActivity : BaseActivity<SaveChatActivityLayoutBinding, Sav
     }
 
     override fun SaveChatViewModel.init() {
-        gainData.get<Collection<ChatItem>>(CHAT_HISTORY)?.let {
-            chatListAdapter.setList(it)
-        }
-        saveState.observe(this@SaveConversationActivity) {
+        saveState.observe(this@SaveConversationFragment) {
             when (it) {
-                SaveChatViewModel.SAVE_SUCCESS -> finish()
+                SaveChatViewModel.SAVE_SUCCESS -> activityViewModel.send(ChatModViewModel.ChatModEvent.Back)
                 SaveChatViewModel.SAVING -> binding.saveProgress.isVisible = true
                 SaveChatViewModel.SAVE_FAILED -> {
                     binding.saveProgress.isVisible = false
-                    binding.state.errorWarning(getColor(R.color.main_color))
+                    binding.state.errorWarning(R.color.main_color)
                     Toast.makeText(
-                        this@SaveConversationActivity,
+                        context,
                         R.string.save_failed.getString(),
                         Toast.LENGTH_SHORT
                     ).show()
                 }
                 SaveChatViewModel.NAME_CONFLICT -> {
                     binding.saveProgress.isVisible = false
-                    binding.name.errorWarning(getColor(R.color.white))
+                    binding.name.errorWarning(R.color.white)
                     Toast.makeText(
-                        this@SaveConversationActivity,
+                        context,
                         R.string.name_conflict.getString(),
                         Toast.LENGTH_SHORT
                     ).show()
@@ -76,31 +72,30 @@ class SaveConversationActivity : BaseActivity<SaveChatActivityLayoutBinding, Sav
         launchMain {
             onEvent {
                 when (it) {
-                    SaveConversationEvent.Finish -> finish()
+                    SaveConversationEvent.Finish -> activityViewModel.send(ChatModViewModel.ChatModEvent.Back)
                     SaveConversationEvent.Save -> {
-                        saveConversation(binding.name.text.toString(), chatListAdapter.getData())
+                        saveConversation(
+                            binding.name.text.toString(),
+                            activityViewModel.chatListAdapter.getData()
+                        )
                     }
                 }
             }
         }
     }
 
-    override fun getSwapAnim(): Pair<Int, Int> {
-        return Pair(R.anim.card_in_rtl, R.anim.card_out_rtl)
-    }
-
     private fun RecyclerView.init() {
-        layoutManager = LinearLayoutManager(this@SaveConversationActivity)
-        adapter = chatListAdapter
+        layoutManager = LinearLayoutManager(context)
+        adapter = activityViewModel.chatListAdapter
     }
 
-    private fun View.errorWarning(originalColor: Int) {
+    private fun View.errorWarning(@ColorRes originalColor: Int) {
         ObjectAnimator.ofArgb(
             this,
             "backgroundColor",
-            originalColor,
-            getColor(R.color.red),
-            originalColor
+            context.getColor(originalColor),
+            context.getColor(R.color.red),
+            context.getColor(originalColor)
         ).setDuration(500L).start()
     }
 

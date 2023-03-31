@@ -2,6 +2,7 @@ package com.protone.eChatGPT.adapter
 
 import android.app.AlertDialog
 import android.graphics.Typeface
+import android.util.Log
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.core.view.isGone
@@ -12,6 +13,7 @@ import com.protone.eChatGPT.R
 import com.protone.eChatGPT.bean.ChatItem
 import com.protone.eChatGPT.databinding.ChatDetailLayoutBinding
 import com.protone.eChatGPT.databinding.ChatItemLayoutBinding
+import com.protone.eChatGPT.mods.TAG
 import com.protone.eChatGPT.utils.getString
 import com.protone.eChatGPT.utils.layoutInflater
 
@@ -37,7 +39,9 @@ open class ChatListAdapter : Adapter<ViewBindingHolder<ChatItemLayoutBinding>>()
     override fun getItemCount(): Int = getListSize()
 
     override fun onBindViewHolder(
-        holder: ViewBindingHolder<ChatItemLayoutBinding>, position: Int, payloads: MutableList<Any>
+        holder: ViewBindingHolder<ChatItemLayoutBinding>,
+        position: Int,
+        payloads: MutableList<Any>
     ) {
         if (payloads.isNotEmpty()) holder.binding.apply {
             content.isGone = false
@@ -61,10 +65,6 @@ open class ChatListAdapter : Adapter<ViewBindingHolder<ChatItemLayoutBinding>>()
                     state.isGone = true
                     retry.isVisible = true
                 }
-                ChatHelper.TIMEOUT -> {
-                    content.text = "..."
-                    state.isGone = true
-                }
             }
         } else super.onBindViewHolder(holder, position, payloads)
     }
@@ -77,18 +77,13 @@ open class ChatListAdapter : Adapter<ViewBindingHolder<ChatItemLayoutBinding>>()
                     root.setBackgroundResource(R.color.ai_content)
                     root.elevation = 0f
                     content.typeface = Typeface.DEFAULT
-                    details.isVisible = true
-                    if (chatItem.chatTag != ChatItem.ChatTag.NetworkError) {
-                        state.isVisible = true
-                    }
+                    aiAppearanceConfiguration(chatItem)
                 }
                 ChatItem.ChatTarget.HUMAN -> {
                     root.setBackgroundResource(R.color.human_content)
                     root.elevation = 2f
                     content.typeface = Typeface.DEFAULT_BOLD
-                    state.isGone = true
-                    details.isGone = true
-                    retry.isGone = true
+                    humanAppearanceConfiguration(chatItem)
                 }
             }
             content.text = chatItem.content
@@ -114,25 +109,33 @@ open class ChatListAdapter : Adapter<ViewBindingHolder<ChatItemLayoutBinding>>()
                             chatItem.usage.completion.toString()
                         )
                     }
-                val dialog = AlertDialog.Builder(root.context)
+                AlertDialog.Builder(root.context)
                     .setView(detailLayoutBinding.root)
                     .create()
-                dialog.show()
-//                val attributes = dialog.window?.attributes
-//                attributes?.dimAmount = 0.0f
-//                dialog.window?.attributes = attributes
-//                dialog.window?.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+                    .show()
             }
         }
     }
+
+    internal open fun ChatItemLayoutBinding.aiAppearanceConfiguration(chatItem: ChatItem) {
+        details.isVisible = true
+        if (chatItem.chatTag != ChatItem.ChatTag.NetworkError) {
+            state.isVisible = true
+        } else {
+            details.isGone = true
+            retry.isVisible = true
+        }
+    }
+
+    internal open fun ChatItemLayoutBinding.humanAppearanceConfiguration(chatItem: ChatItem) {
+        state.isGone = true
+        details.isGone = true
+        retry.isGone = true
+    }
+
 }
 
 interface ChatHelper {
-
-    companion object {
-        const val TIMEOUT = "Timeout"
-        const val CONTENT_CHANGE = "Content-Changed"
-    }
 
     class ChatHelperImp : ChatHelper {
 
@@ -179,6 +182,7 @@ interface ChatHelper {
                 else notifyItemChanged(index, chatItem.chatTag)
             }
         }
+
     }
 
     fun ChatListAdapter.attach()
