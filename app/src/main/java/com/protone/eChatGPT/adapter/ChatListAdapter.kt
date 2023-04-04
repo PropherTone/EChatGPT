@@ -1,26 +1,21 @@
 package com.protone.eChatGPT.adapter
 
-import android.app.AlertDialog
 import android.graphics.Typeface
-import android.util.Log
 import android.view.ViewGroup
-import android.view.WindowManager
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.protone.eChatGPT.R
 import com.protone.eChatGPT.bean.ChatItem
-import com.protone.eChatGPT.databinding.ChatDetailLayoutBinding
 import com.protone.eChatGPT.databinding.ChatItemLayoutBinding
-import com.protone.eChatGPT.mods.TAG
-import com.protone.eChatGPT.utils.getString
 import com.protone.eChatGPT.utils.layoutInflater
 
 open class ChatListAdapter : Adapter<ViewBindingHolder<ChatItemLayoutBinding>>(),
     ChatHelper by ChatHelper.ChatHelperImp() {
 
     lateinit var rv: RecyclerView
+    var itemEvent: ItemEvent? = null
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
@@ -73,13 +68,13 @@ open class ChatListAdapter : Adapter<ViewBindingHolder<ChatItemLayoutBinding>>()
         val chatItem = getChatItem(position)
         holder.binding.apply {
             when (chatItem.target) {
-                ChatItem.ChatTarget.AI -> {
+                is ChatItem.ChatTarget.AI -> {
                     root.setBackgroundResource(R.color.ai_content)
                     root.elevation = 0f
                     content.typeface = Typeface.DEFAULT
                     aiAppearanceConfiguration(chatItem)
                 }
-                ChatItem.ChatTarget.HUMAN -> {
+                is ChatItem.ChatTarget.HUMAN -> {
                     root.setBackgroundResource(R.color.human_content)
                     root.elevation = 2f
                     content.typeface = Typeface.DEFAULT_BOLD
@@ -88,42 +83,28 @@ open class ChatListAdapter : Adapter<ViewBindingHolder<ChatItemLayoutBinding>>()
             }
             content.text = chatItem.content
             root.setOnLongClickListener {
+                itemEvent?.onRootLongClick(getChatItem(holder.layoutPosition))
                 true
             }
             retry.setOnClickListener {
-
+                val index = holder.layoutPosition
+                if (itemEvent?.onRetry(getChatItem(index)) == true) {
+                    remove(index)
+                }
             }
             details.setOnClickListener {
-                val detailLayoutBinding =
-                    ChatDetailLayoutBinding.inflate(root.context.layoutInflater).apply {
-                        totalTokens.text = String.format(
-                            R.string.total_token_count.getString(),
-                            chatItem.usage.total.toString()
-                        )
-                        promptTokens.text = String.format(
-                            R.string.prompt_token_count.getString(),
-                            chatItem.usage.prompt.toString()
-                        )
-                        completionTokens.text = String.format(
-                            R.string.completion_token_count.getString(),
-                            chatItem.usage.completion.toString()
-                        )
-                    }
-                AlertDialog.Builder(root.context)
-                    .setView(detailLayoutBinding.root)
-                    .create()
-                    .show()
+                itemEvent?.onDetail(getChatItem(holder.layoutPosition))
             }
         }
     }
 
     internal open fun ChatItemLayoutBinding.aiAppearanceConfiguration(chatItem: ChatItem) {
         details.isVisible = true
-        if (chatItem.chatTag != ChatItem.ChatTag.NetworkError) {
-            state.isVisible = true
-        } else {
+        if (chatItem.chatTag == ChatItem.ChatTag.NetworkError) {
             details.isGone = true
             retry.isVisible = true
+        } else {
+            state.isVisible = true
         }
     }
 
@@ -131,6 +112,16 @@ open class ChatListAdapter : Adapter<ViewBindingHolder<ChatItemLayoutBinding>>()
         state.isGone = true
         details.isGone = true
         retry.isGone = true
+    }
+
+    interface ItemEvent {
+
+        fun onRootLongClick(item: ChatItem)
+
+        fun onRetry(item: ChatItem): Boolean
+
+        fun onDetail(item: ChatItem)
+
     }
 
 }
@@ -150,6 +141,8 @@ interface ChatHelper {
 
         override fun getChatItem(position: Int): ChatItem = chatList.elementAt(position)
 
+        override fun getChatItemByID(id: String): ChatItem? = chatList.find { it.id == id }
+
         override fun getListSize() = chatList.size
 
         override fun setList(list: Collection<ChatItem>) {
@@ -160,15 +153,25 @@ interface ChatHelper {
         }
 
         override fun remove(chatItem: ChatItem) {
-            chatList.remove(chatItem)
+            val index = chatList.indexOf(chatItem)
+            if (index != -1) remove(index)
         }
 
         override fun remove(position: Int) {
             chatList.removeAt(position)
+            adapter?.notifyItemRemoved(position)
+        }
+
+        override fun clear() {
+            val size = chatList.size
+            chatList.clear()
+            adapter?.notifyItemRangeRemoved(0, size)
         }
 
         override fun chatSent(chatItem: ChatItem) {
             adapter?.run {
+                val userIndex = chatList.indexOfFirst { it.id == chatItem.id }
+                if (userIndex != -1) return
                 chatList.add(chatItem)
                 notifyItemInserted(chatList.size)
                 rv.scrollToPosition(chatList.size - 1)
@@ -176,10 +179,16 @@ interface ChatHelper {
         }
 
         override fun receive(chatItem: ChatItem) {
+            if (chatItem.target !is ChatItem.ChatTarget.AI) return
             adapter?.run {
-                val index = chatList.indexOfFirst { it.id == chatItem.id }
-                if (index == -1) chatSent(chatItem)
-                else notifyItemChanged(index, chatItem.chatTag)
+                val aiIndex = chatList.indexOfFirst { it.id == chatItem.id }
+                if (aiIndex == -1) {
+                    val userIndex = chatList.indexOfFirst { it.id == chatItem.target.userId }
+                    if (userIndex != -1) {
+                        chatList.add(userIndex + 1, chatItem)
+                        notifyItemInserted(userIndex + 1)
+                    } else chatSent(chatItem)
+                } else notifyItemChanged(aiIndex, chatItem.chatTag)
             }
         }
 
@@ -191,6 +200,8 @@ interface ChatHelper {
 
     fun getChatItem(position: Int): ChatItem
 
+    fun getChatItemByID(id: String): ChatItem?
+
     fun getListSize(): Int
 
     fun setList(list: Collection<ChatItem>)
@@ -198,6 +209,8 @@ interface ChatHelper {
     fun remove(chatItem: ChatItem)
 
     fun remove(position: Int)
+
+    fun clear()
 
     fun chatSent(chatItem: ChatItem)
 

@@ -26,4 +26,6 @@
     <string name="total_token_count">Total tokens : %s</string>
     <string name="prompt_token_count">Prompt token : %s</string>
     <string name="completion_token_count">Completion token : %s</string>
+    <string name="completion">Completion</string>
+    <string name="history">History</string>
 </resources>

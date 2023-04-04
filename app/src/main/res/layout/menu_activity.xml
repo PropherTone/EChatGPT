@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/back"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/main_color_background_ripple"
+            android:fitsSystemWindows="true"
+            android:gravity="center"
+            android:paddingStart="@dimen/content_padding"
+            android:paddingEnd="@dimen/content_padding"
+            android:paddingBottom="@dimen/content_padding"
+            android:textColor="@color/text_color_light"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/completion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/completion"
+            android:textColor="@color/text_color_light"
+            app:icon="@drawable/chat"
+            app:iconGravity="top"
+            app:iconPadding="@dimen/option_content_text_padding"
+            app:iconTint="@color/white" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/history"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/history"
+            android:textColor="@color/text_color_light"
+            app:icon="@drawable/history"
+            app:iconGravity="top"
+            app:iconPadding="@dimen/option_content_text_padding"
+            app:iconTint="@color/white" />
+
+        <androidx.constraintlayout.helper.widget.Flow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="completion,history"
+            app:flow_wrapMode="chain"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/back"
+            app:layout_constraintVertical_bias="0.08" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

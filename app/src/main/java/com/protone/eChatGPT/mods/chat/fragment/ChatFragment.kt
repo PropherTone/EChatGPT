@@ -1,5 +1,9 @@
 package com.protone.eChatGPT.mods.chat.fragment
 
+import android.app.AlertDialog
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
@@ -9,12 +13,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.aallam.openai.api.BetaOpenAI
 import com.protone.eChatGPT.R
-import com.protone.eChatGPT.mods.BaseFragment
+import com.protone.eChatGPT.adapter.ChatListAdapter
 import com.protone.eChatGPT.bean.ChatItem
+import com.protone.eChatGPT.databinding.ChatDetailLayoutBinding
 import com.protone.eChatGPT.databinding.ChatFragmentBinding
 import com.protone.eChatGPT.messenger.EventMessenger
 import com.protone.eChatGPT.messenger.EventMessengerImp
 import com.protone.eChatGPT.messenger.event.ChatViewEvent
+import com.protone.eChatGPT.mods.BaseFragment
 import com.protone.eChatGPT.utils.*
 import com.protone.eChatGPT.viewModel.activityViewModel.ChatModViewModel
 import com.protone.eChatGPT.viewModel.fragViewModel.ChatViewModel
@@ -64,11 +70,14 @@ class ChatFragment : BaseFragment<ChatFragmentBinding, ChatViewModel, ChatModVie
             onEvent {
                 when (it) {
                     is ChatViewEvent.OnSendMsg -> {
-                        if (it.msg.isEmpty()) return@onEvent
-                        binding.chatInputBox.text.clear()
                         activityViewModel.apply {
-                            chat(msg = it.msg, chatList = chatListAdapter.getData()) { chatItem ->
-                                if (chatItem.target == ChatItem.ChatTarget.HUMAN) {
+                            chat(
+                                userId = it.userId,
+                                systemId = it.systemId,
+                                msg = it.msg,
+                                chatList = chatListAdapter.getData()
+                            ) { chatItem ->
+                                if (chatItem.target is ChatItem.ChatTarget.HUMAN) {
                                     launch { chatListAdapter.chatSent(chatItem) }
                                     return@chat
                                 }
@@ -78,7 +87,7 @@ class ChatFragment : BaseFragment<ChatFragmentBinding, ChatViewModel, ChatModVie
                     }
                     ChatViewEvent.OnSave -> {
                         binding.chatSave.elevation = 0f
-                        activityViewModel.send(ChatModViewModel.ChatModEvent.SaveConversation)
+                        activityViewModel.send(ChatModViewModel.ChatModViewEvent.SaveConversation)
                         binding.chatSave.elevation = R.dimen.option_elevation.getDimension()
                     }
                     ChatViewEvent.OnConversation -> reverseIsConversation()
@@ -92,7 +101,56 @@ class ChatFragment : BaseFragment<ChatFragmentBinding, ChatViewModel, ChatModVie
         layoutManager = LinearLayoutManager(context).apply {
             stackFromEnd = true
         }
-        adapter = activityViewModel.chatListAdapter
+        adapter = activityViewModel.chatListAdapter.apply {
+            itemEvent = object : ChatListAdapter.ItemEvent {
+                override fun onRootLongClick(item: ChatItem) {
+                    (activity?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?)
+                        ?.setPrimaryClip(ClipData.newPlainText("chat", item.content))
+                }
+
+                override fun onRetry(item: ChatItem): Boolean {
+                    if (item.target !is ChatItem.ChatTarget.AI) return false
+                    return activityViewModel.chatListAdapter
+                        .getChatItemByID(item.target.userId)
+                        ?.let {
+                            send(
+                                ChatViewEvent.OnSendMsg(
+                                    it.content.toString(),
+                                    it.id,
+                                    if (it.target is ChatItem.ChatTarget.HUMAN && it.target.systemId != null)
+                                        it.target.systemId
+                                    else null
+                                )
+                            )
+                            true
+                        } == true
+                }
+
+                override fun onDetail(item: ChatItem) {
+                    val detailLayoutBinding =
+                        ChatDetailLayoutBinding.inflate(layoutInflater).apply {
+                            chatContent.text = item.content
+                            totalTokens.text = String.format(
+                                R.string.total_token_count.getString(),
+                                item.usage.total.toString()
+                            )
+                            promptTokens.text = String.format(
+                                R.string.prompt_token_count.getString(),
+                                item.usage.prompt.toString()
+                            )
+                            completionTokens.text = String.format(
+                                R.string.completion_token_count.getString(),
+                                item.usage.completion.toString()
+                            )
+                        }
+                    AlertDialog.Builder(context)
+                        .setView(detailLayoutBinding.root)
+                        .create()
+                        .show()
+                }
+
+            }
+        }
     }
 
     private fun ChatFragmentBinding.initViewAction() {
@@ -105,8 +163,14 @@ class ChatFragment : BaseFragment<ChatFragmentBinding, ChatViewModel, ChatModVie
         chatSystem.setOnClickListener {
             send(ChatViewEvent.OnSystem)
         }
+        openMenu.setOnClickListener {
+            activityViewModel.send(ChatModViewModel.ChatModViewEvent.BackToMenu)
+        }
         send.setOnClickListener {
-            send(ChatViewEvent.OnSendMsg(chatInputBox.text.toString()))
+            val msg = chatInputBox.text.toString()
+            if (msg.isEmpty()) return@setOnClickListener
+            binding.chatInputBox.text.clear()
+            send(ChatViewEvent.OnSendMsg(msg))
         }
     }
 }

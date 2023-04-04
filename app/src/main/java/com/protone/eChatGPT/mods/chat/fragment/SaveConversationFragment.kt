@@ -47,7 +47,7 @@ class SaveConversationFragment :
     override fun SaveChatViewModel.init() {
         saveState.observe(this@SaveConversationFragment) {
             when (it) {
-                SaveChatViewModel.SAVE_SUCCESS -> activityViewModel.send(ChatModViewModel.ChatModEvent.Back)
+                SaveChatViewModel.SAVE_SUCCESS -> activityViewModel.send(ChatModViewModel.ChatModViewEvent.Back)
                 SaveChatViewModel.SAVING -> binding.saveProgress.isVisible = true
                 SaveChatViewModel.SAVE_FAILED -> {
                     binding.saveProgress.isVisible = false
@@ -72,7 +72,7 @@ class SaveConversationFragment :
         launchMain {
             onEvent {
                 when (it) {
-                    SaveConversationEvent.Finish -> activityViewModel.send(ChatModViewModel.ChatModEvent.Back)
+                    SaveConversationEvent.Finish -> activityViewModel.send(ChatModViewModel.ChatModViewEvent.Back)
                     SaveConversationEvent.Save -> {
                         saveConversation(
                             binding.name.text.toString(),

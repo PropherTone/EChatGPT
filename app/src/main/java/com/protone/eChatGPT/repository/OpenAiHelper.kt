@@ -50,7 +50,7 @@ class OpenAiHelper {
                         refreshTimer()
                         (item ?: ChatItem(
                             completionChunk.id,
-                            ChatItem.ChatTarget.AI,
+                            ChatItem.ChatTarget.AI(userChatID),
                             System.currentTimeMillis()
                         ).also { item = it }).let { chatItem ->
                             Log.d("TAG", "chat: $completionChunk")
@@ -66,7 +66,7 @@ class OpenAiHelper {
                     callBack(
                         item ?: ChatItem(
                             getChatId().toString(),
-                            ChatItem.ChatTarget.AI,
+                            ChatItem.ChatTarget.AI(userChatID),
                             System.currentTimeMillis()
                         ).also {
                             it.content =

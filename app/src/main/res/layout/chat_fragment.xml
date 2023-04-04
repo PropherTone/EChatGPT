@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/main_color"
-            app:constraint_referenced_ids="chat_input_box,send,chat_save,conversation,send,open_setting" />
+            app:constraint_referenced_ids="chat_input_box,send,chat_save,conversation,send,open_menu" />
 
         <EditText
             android:id="@+id/chat_input_box"
@@ -95,7 +95,7 @@
             android:text="@string/describe_behavior"
             android:textColor="@color/text_color_light"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@id/open_setting"
+            app:layout_constraintBottom_toTopOf="@id/open_menu"
             app:layout_constraintEnd_toStartOf="@id/conversation"
             app:layout_constraintStart_toEndOf="@id/chat_save" />
 
@@ -116,7 +116,7 @@
             app:layout_constraintTop_toTopOf="@id/chat_system" />
 
         <ImageView
-            android:id="@+id/open_setting"
+            android:id="@+id/open_menu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white_transparent"

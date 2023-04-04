@@ -3,22 +3,33 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="520dp">
+        android:layout_height="520dp"
+        android:background="@color/white">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/option_content_margin"
-            android:background="@color/white"
             android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/chat_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:elevation="@dimen/content_elevation"
+                android:focusable="true"
+                android:letterSpacing="0.048"
+                android:padding="@dimen/content_padding"
+                android:textColor="@color/text_color"
+                android:textIsSelectable="true"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/total_tokens"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/option_content_margin"
                 android:background="@color/main_color"
-                android:elevation="@dimen/content_elevation"
                 android:padding="@dimen/option_content_padding"
                 android:textColor="@color/white"
                 android:textSize="@dimen/content_text_size" />
@@ -27,7 +38,6 @@
                 android:id="@+id/prompt_tokens"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/option_content_margin"
                 android:background="@color/main_color"
                 android:padding="@dimen/option_content_padding"
                 android:textColor="@color/white"
@@ -37,7 +47,6 @@
                 android:id="@+id/completion_tokens"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/option_content_margin"
                 android:background="@color/main_color"
                 android:padding="@dimen/option_content_padding"
                 android:textColor="@color/white"

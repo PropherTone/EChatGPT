@@ -9,18 +9,19 @@ import kotlinx.coroutines.launch
 
 class ChatModViewModel : ViewModel() {
 
-    sealed class ChatModEvent {
-        object SaveConversation : ChatModEvent()
-        object Back : ChatModEvent()
+    sealed class ChatModViewEvent {
+        object SaveConversation : ChatModViewEvent()
+        object Back : ChatModViewEvent()
+        object BackToMenu : ChatModViewEvent()
     }
 
-    private val _eventFlow by lazy { MutableSharedFlow<ChatModEvent>() }
+    private val _eventFlow by lazy { MutableSharedFlow<ChatModViewEvent>() }
     val eventFlow get() = _eventFlow.asSharedFlow()
 
     val chatListAdapter by lazy { ChatListAdapter() }
     var normalSaveViewHeight = 0
 
-    fun send(event: ChatModEvent) {
+    fun send(event: ChatModViewEvent) {
         viewModelScope.launch {
             _eventFlow.emit(event)
         }

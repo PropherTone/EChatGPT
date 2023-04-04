@@ -23,13 +23,18 @@
         <activity
             android:name=".mods.chat.ChatActivity"
             android:exported="true"
-            android:launchMode="singleInstance">
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".mods.menu.MenuActivity"
+            android:launchMode="singleInstance"
+            android:taskAffinity="com.protone.eChatGPT.menu" />
+
         <service android:name=".service.ChatService" />
     </application>
 

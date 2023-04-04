@@ -1,5 +1,6 @@
 package com.protone.eChatGPT.mods
 
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
@@ -11,15 +12,19 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModel
+import com.protone.eChatGPT.bean.SwapAni
 import com.protone.eChatGPT.utils.onResult
 import com.protone.eChatGPT.utils.setTransparentClipStatusBar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
+import java.util.concurrent.LinkedBlockingDeque
 import java.util.concurrent.atomic.AtomicInteger
 
 const val TAG = "EChatGPT_TAG"
+
+val activities = LinkedBlockingDeque<Class<out Activity>>()
 
 abstract class BaseActivity<VB : ViewDataBinding, VM : ViewModel> : AppCompatActivity(),
     CoroutineScope by MainScope() {
@@ -36,6 +41,7 @@ abstract class BaseActivity<VB : ViewDataBinding, VM : ViewModel> : AppCompatAct
     override fun onCreate(savedInstanceState: Bundle?) {
         setTransparentClipStatusBar(AppCompatDelegate.getDefaultNightMode() == MODE_NIGHT_YES)
         super.onCreate(savedInstanceState)
+        activities.add(this::class.java)
         binding = createView().apply {
             setContentView(root)
             root.post { viewModel.init() }
@@ -82,7 +88,7 @@ abstract class BaseActivity<VB : ViewDataBinding, VM : ViewModel> : AppCompatAct
         onLayoutChangeListener = null
     }
 
-    open fun getSwapAnim(): Pair<Int, Int>? {
+    open fun getSwapAnim(): SwapAni? {
         return null
     }
 
@@ -90,13 +96,14 @@ abstract class BaseActivity<VB : ViewDataBinding, VM : ViewModel> : AppCompatAct
         removeSoftInputStatusListener()
         super.finish()
         getSwapAnim()?.let {
-            overridePendingTransition(it.first, it.second)
+            overridePendingTransition(it.inAni, it.outAni)
         }
     }
 
     override fun onDestroy() {
         try {
             cancel()
+            activities.remove(this::class.java)
         } finally {
             super.onDestroy()
         }

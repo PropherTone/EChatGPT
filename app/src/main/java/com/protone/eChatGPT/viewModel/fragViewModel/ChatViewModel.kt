@@ -32,6 +32,12 @@ class ChatViewModel : ViewModel() {
     private val _conversationState by lazy { MutableLiveData<Boolean>() }
     val conversationState: LiveData<Boolean> get() = _conversationState
 
+    private val systemChatCache by lazy { arrayOfNulls<String>(1) }
+    private fun getSystemID(): String? = systemChatCache[0]?.also { systemChatCache[0] = null }
+    private fun cacheSystemID(systemId: String?) {
+        systemChatCache[0] = systemId
+    }
+
     fun reverseIsSystem() {
         _isSystem.postValue(!(_isSystem.value ?: false))
     }
@@ -42,6 +48,8 @@ class ChatViewModel : ViewModel() {
 
     @OptIn(BetaOpenAI::class)
     fun chat(
+        userId: String?,
+        systemId: String?,
         chatRole: ChatRole = ChatRole.User,
         chatList: Collection<ChatItem>,
         msg: String,
@@ -50,10 +58,10 @@ class ChatViewModel : ViewModel() {
         if (_conversationState.value == true) return
         _conversationState.postValue(true)
         viewModelScope.launchDefault chatJob@{
-            val system = isSystem.value ?: false
-            val userChatItem = getUserChatItem(system, msg)
+            val userChatItem = getUserChatItem(userId, systemId, msg)
             callBack(userChatItem)
-            if (system) {
+            if (isSystem.value == true) {
+                cacheSystemID(userChatItem.id)
                 reverseIsSystem()
                 return@chatJob
             }
@@ -61,7 +69,7 @@ class ChatViewModel : ViewModel() {
                 userChatItem.id,
                 ChatCompletionRequest(
                     model = ModelId("gpt-3.5-turbo"),
-                    generateChatMessages(chatList, chatRole, msg)
+                    generateChatMessages(userChatItem, chatList, chatRole, msg)
                 ),
                 CONVERSATION_TIME_OUT,
                 onTimeout = { cancel() }
@@ -71,15 +79,20 @@ class ChatViewModel : ViewModel() {
         }
     }
 
-    private fun getUserChatItem(isSystem: Boolean, msg: String) = ChatItem(
-        openAi.getChatId().toString(),
-        ChatItem.ChatTarget.HUMAN.also { it.isSystem = isSystem },
+    private fun getUserChatItem(
+        userId: String?,
+        systemId: String?,
+        msg: String
+    ) = ChatItem(
+        userId ?: openAi.getChatId().toString(),
+        ChatItem.ChatTarget.HUMAN(systemId ?: getSystemID()),
         msg,
         System.currentTimeMillis()
     )
 
     @OptIn(BetaOpenAI::class)
     private fun generateChatMessages(
+        item: ChatItem,
         chatList: Collection<ChatItem>,
         chatRole: ChatRole = ChatRole.User,
         msg: String,
@@ -89,10 +102,12 @@ class ChatViewModel : ViewModel() {
                 ChatMessage(chatItem.chatRole, chatItem.content.toString())
             } as MutableList
         }
-        chatList.takeIf { it.isNotEmpty() }?.last()?.target?.isSystem == true -> {
-            chatList.last().let { chatItem ->
-                listOf(ChatMessage(chatItem.chatRole, chatItem.content as String))
-            } as MutableList
+        item.target is ChatItem.ChatTarget.HUMAN -> {
+            chatList.find {
+                it.id == item.target.systemId
+            }?.let {
+                mutableListOf(ChatMessage(it.chatRole, it.content as String))
+            } ?: mutableListOf()
         }
         else -> mutableListOf()
     }.also { it.add(ChatMessage(chatRole, msg)) }

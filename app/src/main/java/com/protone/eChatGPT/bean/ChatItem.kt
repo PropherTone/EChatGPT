@@ -17,9 +17,9 @@ data class ChatItem(val id: String, val target: ChatTarget, val time: Long) {
         }
     }
 
-    enum class ChatTarget(var isSystem: Boolean) {
-        AI(false),
-        HUMAN(false)
+    sealed class ChatTarget {
+        data class AI(val userId: String) : ChatTarget()
+        data class HUMAN(val systemId: String? = null) : ChatTarget()
     }
 
     private val sb = StringBuilder()
@@ -52,12 +52,39 @@ data class ChatItem(val id: String, val target: ChatTarget, val time: Long) {
     @OptIn(BetaOpenAI::class)
     val chatRole
         get() = when (target) {
-            ChatTarget.AI -> ChatRole.Assistant
-            else -> if (target.isSystem) ChatRole.System else ChatRole.User
+            is ChatTarget.AI -> ChatRole.Assistant
+            is ChatTarget.HUMAN -> if (target.systemId != null) ChatRole.System else ChatRole.User
         }
 
     override fun toString(): String {
         return "ChatItem(id='$id', target=$target, time=$time, sb=$sb, content=$content, usage=$usage, chatTag=$chatTag)"
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as ChatItem
+
+        if (id != other.id) return false
+        if (target != other.target) return false
+        if (time != other.time) return false
+        if (content != other.content) return false
+        if (usage != other.usage) return false
+        if (chatTag != other.chatTag) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = id.hashCode()
+        result = 31 * result + target.hashCode()
+        result = 31 * result + time.hashCode()
+        result = 31 * result + content.hashCode()
+        result = 31 * result + usage.hashCode()
+        result = 31 * result + chatTag.hashCode()
+
+        return result
     }
 
     data class TokenUsage(var total: Int, var prompt: Int, var completion: Int)
