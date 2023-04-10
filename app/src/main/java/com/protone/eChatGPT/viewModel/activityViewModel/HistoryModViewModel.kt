@@ -9,6 +9,7 @@ import kotlinx.coroutines.launch
 class HistoryModViewModel : ViewModel() {
 
     sealed class HistoryViewEvent {
+        object Finish : HistoryViewEvent()
         object ToDetail : HistoryViewEvent()
     }
 

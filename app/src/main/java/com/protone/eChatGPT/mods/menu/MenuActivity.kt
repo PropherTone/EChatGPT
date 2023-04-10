@@ -8,6 +8,7 @@ import com.protone.eChatGPT.databinding.MenuActivityBinding
 import com.protone.eChatGPT.mods.BaseActivity
 import com.protone.eChatGPT.mods.activities
 import com.protone.eChatGPT.mods.chat.ChatActivity
+import com.protone.eChatGPT.mods.history.HistoryActivity
 import com.protone.eChatGPT.utils.intent
 import com.protone.eChatGPT.viewModel.activityViewModel.MenuViewModel
 
@@ -37,7 +38,7 @@ class MenuActivity : BaseActivity<MenuActivityBinding, MenuViewModel>() {
             startActivity(ChatActivity::class.intent)
         }
         history.setOnClickListener {
-
+            startActivity(HistoryActivity::class.intent)
         }
     }
 }

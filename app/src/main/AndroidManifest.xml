@@ -23,7 +23,8 @@
         <activity
             android:name=".mods.chat.ChatActivity"
             android:exported="true"
-            android:launchMode="singleTask">
+            android:launchMode="singleInstance"
+            android:taskAffinity="con.protone.eChatGPT.completion">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -34,6 +35,8 @@
             android:name=".mods.menu.MenuActivity"
             android:launchMode="singleInstance"
             android:taskAffinity="com.protone.eChatGPT.menu" />
+
+        <activity android:name=".mods.history.HistoryActivity" />
 
         <service android:name=".service.ChatService" />
     </application>

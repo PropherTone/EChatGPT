@@ -23,6 +23,7 @@ class HistoryActivity : BaseActivity<HistoryActivityBinding, HistoryModViewModel
                 when (it) {
                     HistoryModViewModel.HistoryViewEvent.ToDetail ->
                         navController.navigate(R.id.action_historiesFragment_to_historyFragment)
+                    HistoryModViewModel.HistoryViewEvent.Finish -> finish()
                 }
             }
         }
