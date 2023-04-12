@@ -27,17 +27,20 @@ class SaveChatViewModel : ViewModel() {
     fun saveConversation(name: String, data: Collection<ChatItem>) {
         _saveState.postValue(SAVING)
         viewModelScope.launchIO saveJob@{
-            if (chatHistoryDAO.getChatHistoryByName(name) > 0) {
+            if (chatHistoryDAO.getChatHistoryCountByName(name) > 0) {
                 _saveState.postValue(NAME_CONFLICT)
                 return@saveJob
             }
             EApplication.app.filesDir?.absolutePath?.let { dir ->
-                data.listToJson(ChatItem::class.java).saveToFile(dir, name)
-                ChatHistory(name, dir, System.currentTimeMillis())
+                ChatHistory(
+                    name,
+                    data.listToJson(ChatItem::class.java).saveToFile(dir, name) ?: return@let null,
+                    System.currentTimeMillis()
+                )
             }?.let {
                 chatHistoryDAO.insertChatHistory(it)
-            }
-            _saveState.postValue(SAVE_SUCCESS)
+                _saveState.postValue(SAVE_SUCCESS)
+            } ?: _saveState.postValue(SAVE_FAILED)
         }.invokeOnCompletion {
             if (it != null) _saveState.postValue(SAVE_FAILED)
         }

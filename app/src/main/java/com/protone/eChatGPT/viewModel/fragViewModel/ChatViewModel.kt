@@ -58,9 +58,10 @@ class ChatViewModel : ViewModel() {
         if (_conversationState.value == true) return
         _conversationState.postValue(true)
         viewModelScope.launchDefault chatJob@{
-            val userChatItem = getUserChatItem(userId, systemId, msg)
+            val system = isSystem.value == true
+            val userChatItem = getUserChatItem(userId, systemId, system, msg)
             callBack(userChatItem)
-            if (isSystem.value == true) {
+            if (system) {
                 cacheSystemID(userChatItem.id)
                 reverseIsSystem()
                 return@chatJob
@@ -82,10 +83,11 @@ class ChatViewModel : ViewModel() {
     private fun getUserChatItem(
         userId: String?,
         systemId: String?,
+        isSystem: Boolean,
         msg: String
     ) = ChatItem(
         userId ?: openAi.getChatId().toString(),
-        ChatItem.ChatTarget.HUMAN(systemId ?: getSystemID()),
+        ChatItem.ChatTarget.HUMAN(systemId ?: getSystemID(), isSystem),
         msg,
         System.currentTimeMillis()
     )

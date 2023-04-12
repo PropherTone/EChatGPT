@@ -46,11 +46,5 @@
             app:backgroundTint="@color/red_smooth"
             app:layout_constraintTop_toBottomOf="@id/confirm" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/content_padding"
-            android:elevation="@dimen/content_elevation"
-            app:layout_constraintTop_toBottomOf="@id/cancel" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

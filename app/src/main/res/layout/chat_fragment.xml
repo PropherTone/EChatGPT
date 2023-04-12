@@ -30,6 +30,8 @@
             android:layout_height="@dimen/input_box_height"
             android:background="@color/white"
             android:elevation="@dimen/content_elevation"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:hint="@string/enter_message"
             android:importantForAutofill="no"
             android:inputType="text"

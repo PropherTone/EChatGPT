@@ -18,10 +18,7 @@
             android:id="@+id/options"
             android:layout_width="match_parent"
             android:layout_height="@dimen/option_item_height"
-            android:background="@drawable/main_color_background_ripple"
-            android:contentDescription="@string/go_back"
-            android:padding="@dimen/option_content_padding"
-            android:src="@drawable/close"
+            android:background="@color/main_color"
             app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

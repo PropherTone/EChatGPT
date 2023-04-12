@@ -15,7 +15,10 @@ open class ChatListAdapter : Adapter<ViewBindingHolder<ChatItemLayoutBinding>>()
     ChatHelper by ChatHelper.ChatHelperImp() {
 
     lateinit var rv: RecyclerView
-    var itemEvent: ItemEvent? = null
+    private var itemEvent: ItemEvent? = null
+    fun setItemEvent(itemEvent: ItemEvent) {
+        this.itemEvent = itemEvent
+    }
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
@@ -139,7 +142,7 @@ interface ChatHelper {
 
         override fun getData(): Collection<ChatItem> = chatList
 
-        override fun getChatItem(position: Int): ChatItem = chatList.elementAt(position)
+        override fun getChatItem(position: Int): ChatItem = chatList[position]
 
         override fun getChatItemByID(id: String): ChatItem? = chatList.find { it.id == id }
 
@@ -147,8 +150,9 @@ interface ChatHelper {
 
         override fun setList(list: Collection<ChatItem>) {
             adapter?.run {
+                val size = chatList.size
                 chatList.addAll(list)
-                notifyItemRangeInserted(0, chatList.size)
+                notifyItemRangeInserted(size, chatList.size)
             }
         }
 

@@ -1,5 +1,6 @@
 package com.protone.eChatGPT.mods.menu
 
+import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import com.protone.eChatGPT.R
@@ -15,14 +16,14 @@ import com.protone.eChatGPT.viewModel.activityViewModel.MenuViewModel
 class MenuActivity : BaseActivity<MenuActivityBinding, MenuViewModel>() {
     override val viewModel: MenuViewModel by viewModels()
 
-    override fun createView(): MenuActivityBinding {
+    override fun createView(savedInstanceState: Bundle?): MenuActivityBinding {
         return MenuActivityBinding.inflate(layoutInflater).apply {
             back.isVisible = activities.contains(ChatActivity::class.java)
             initViewAction()
         }
     }
 
-    override fun MenuViewModel.init() {
+    override fun MenuViewModel.init(savedInstanceState: Bundle?) {
 
     }
 
@@ -32,10 +33,11 @@ class MenuActivity : BaseActivity<MenuActivityBinding, MenuViewModel>() {
 
     private fun MenuActivityBinding.initViewAction() {
         back.setOnClickListener {
-            finish()
+            startActivity(ChatActivity::class.intent)
+            overridePendingTransition(R.anim.card_bot_in, R.anim.card_bot_out)
         }
         completion.setOnClickListener {
-            startActivity(ChatActivity::class.intent)
+            startActivity(ChatActivity::class.intent.putExtra(ChatActivity.OPTION, ""))
         }
         history.setOnClickListener {
             startActivity(HistoryActivity::class.intent)

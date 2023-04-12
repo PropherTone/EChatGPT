@@ -1,6 +1,6 @@
-package com.protone.eChatGPT.messenger
+package com.protone.eChatGPT.utils.messenger
 
-import com.protone.eChatGPT.messenger.event.Event
+import com.protone.eChatGPT.utils.messenger.event.Event
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 

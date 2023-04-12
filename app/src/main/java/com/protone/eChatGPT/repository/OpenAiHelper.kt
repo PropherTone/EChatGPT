@@ -19,7 +19,7 @@ class OpenAiHelper {
 
     private var chatId = -1L
 
-    fun getChatId() = --chatId
+    fun getChatId() = --chatId + System.currentTimeMillis()
 
     private constructor() {
         api = OpenAI("")
@@ -65,7 +65,7 @@ class OpenAiHelper {
                 } catch (e: OpenAIHttpException) {
                     callBack(
                         item ?: ChatItem(
-                            getChatId().toString(),
+                            "AI" + getChatId().toString(),
                             ChatItem.ChatTarget.AI(userChatID),
                             System.currentTimeMillis()
                         ).also {

@@ -10,9 +10,10 @@ import kotlinx.coroutines.launch
 class ChatModViewModel : ViewModel() {
 
     sealed class ChatModViewEvent {
-        object SaveConversation : ChatModViewEvent()
+        data class SaveConversation(val startNewAfterSaved: Boolean= false) : ChatModViewEvent()
         object Back : ChatModViewEvent()
         object BackToMenu : ChatModViewEvent()
+        object NewCompletion : ChatModViewEvent()
     }
 
     private val _eventFlow by lazy { MutableSharedFlow<ChatModViewEvent>() }

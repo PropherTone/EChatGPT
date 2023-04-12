@@ -28,4 +28,12 @@
     <string name="completion_token_count">Completion token : %s</string>
     <string name="completion">Completion</string>
     <string name="history">History</string>
+    <string name="exit_option_mode">Exit option mode</string>
+    <string name="delete_history">Delete history</string>
+    <string name="continue_chat">Continue chat</string>
+    <string name="no_need">No need</string>
+    <string name="go_save">Go save</string>
+    <string name="new_completion_guide">Save completion before starting a new one?</string>
+    <string name="continue_completion_guide">Combine completion?</string>
+    <string name="combine">Combine</string>
 </resources>

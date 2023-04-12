@@ -11,12 +11,13 @@
     <dimen name="option_content_padding">8dp</dimen>
     <dimen name="option_content_text_padding">4dp</dimen>
     <dimen name="item_content_margin">4dp</dimen>
+    <dimen name="item_content_padding">24dp</dimen>
     <dimen name="item_Decoration">2dp</dimen>
 
     <dimen name="option_content_text_size">12sp</dimen>
     <dimen name="content_text_size">18sp</dimen>
-    <dimen name="item_content_text_size">16sp</dimen>
-    <dimen name="item_sub_content_text_size">12sp</dimen>
+    <dimen name="item_content_text_size">18sp</dimen>
+    <dimen name="item_sub_content_text_size">14sp</dimen>
     <dimen name="option_item_height">52dp</dimen>
 
 </resources>

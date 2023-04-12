@@ -1,4 +1,4 @@
-package com.protone.eChatGPT.messenger.event
+package com.protone.eChatGPT.utils.messenger.event
 
 sealed class ChatViewEvent : Event() {
     object OnSave : ChatViewEvent()

@@ -1,31 +1,45 @@
 package com.protone.eChatGPT.mods.chat
 
 import android.content.Intent
+import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.findNavController
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.protone.eChatGPT.R
 import com.protone.eChatGPT.databinding.ChatActivityBinding
-import com.protone.eChatGPT.messenger.EventMessenger
-import com.protone.eChatGPT.messenger.EventMessengerImp
-import com.protone.eChatGPT.messenger.event.ChatViewEvent
+import com.protone.eChatGPT.databinding.ContinueCompletionGuideBinding
+import com.protone.eChatGPT.databinding.NewCompletionGuideDialogBinding
 import com.protone.eChatGPT.mods.BaseActivity
-import com.protone.eChatGPT.mods.chat.fragment.ChatFragment
+import com.protone.eChatGPT.mods.chat.fragment.SaveConversationFragment
 import com.protone.eChatGPT.mods.menu.MenuActivity
 import com.protone.eChatGPT.repository.userConfig
 import com.protone.eChatGPT.service.ChatService
-import com.protone.eChatGPT.utils.*
+import com.protone.eChatGPT.utils.intent
+import com.protone.eChatGPT.utils.messenger.EventMessenger
+import com.protone.eChatGPT.utils.messenger.EventMessengerImp
+import com.protone.eChatGPT.utils.messenger.event.ChatViewEvent
+import com.protone.eChatGPT.utils.requestBackgroundAlive
+import com.protone.eChatGPT.utils.showGetTokenPop
 import com.protone.eChatGPT.viewModel.activityViewModel.ChatModViewModel
+import com.protone.eChatGPT.viewModel.fragViewModel.HistoryViewModel
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
-
 
 class ChatActivity : BaseActivity<ChatActivityBinding, ChatModViewModel>(),
     EventMessenger<ChatViewEvent> by EventMessengerImp() {
+
+    companion object {
+        const val OPTION = "Option"
+        const val GROUP = "Group"
+    }
 
     override val viewModel: ChatModViewModel by viewModels()
 
     private val navController by lazy { findNavController(R.id.chat_nav_host) }
 
-    override fun createView(): ChatActivityBinding {
+    override fun createView(savedInstanceState: Bundle?): ChatActivityBinding {
         requestBackgroundAlive()
         return ChatActivityBinding.inflate(layoutInflater).apply {
             root.post {
@@ -40,20 +54,34 @@ class ChatActivity : BaseActivity<ChatActivityBinding, ChatModViewModel>(),
         }
     }
 
-    override fun ChatModViewModel.init() {
+    override fun ChatModViewModel.init(savedInstanceState: Bundle?) {
         launch {
-            eventFlow.bufferCollect { event ->
+            eventFlow.collect { event ->
+                if (lifecycle.currentState < Lifecycle.State.STARTED) return@collect
                 when (event) {
-                    ChatModViewModel.ChatModViewEvent.SaveConversation -> {
-                        navController.navigate(R.id.action_chatFragment_to_saveConversationActivity)
+                    is ChatModViewModel.ChatModViewEvent.SaveConversation -> {
+                        navController.navigate(
+                            R.id.action_chatFragment_to_saveConversationActivity,
+                            Bundle().apply {
+                                putBoolean(
+                                    SaveConversationFragment.FINISH_OPTION,
+                                    event.startNewAfterSaved
+                                )
+                            })
                     }
                     ChatModViewModel.ChatModViewEvent.Back -> navController.popBackStack()
                     ChatModViewModel.ChatModViewEvent.BackToMenu -> {
+                        navController
                         startActivity(MenuActivity::class.intent.also {
                             it.flags =
                                 Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                         })
                         overridePendingTransition(R.anim.card_top_in, R.anim.card_top_out)
+                    }
+                    ChatModViewModel.ChatModViewEvent.NewCompletion -> {
+
+                        navController.popBackStack()
+                        navController.navigate(R.id.chatFragment)
                     }
                 }
             }
@@ -62,10 +90,76 @@ class ChatActivity : BaseActivity<ChatActivityBinding, ChatModViewModel>(),
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        viewModel.chatListAdapter.clear()
-        supportFragmentManager.beginTransaction().apply {
-            replace(R.id.chat_nav_host, ChatFragment())
-            commit()
+        intent?.apply {
+            getStringExtra(OPTION)?.run {
+                startNewCompletion(
+                    goSave = {
+                        viewModel.send(ChatModViewModel.ChatModViewEvent.SaveConversation(true))
+                    },
+                    noNeed = {
+                        getStringExtra(GROUP)?.let {
+                            combineCompletion(
+                                combine = {
+                                    setCompletion(it)
+                                },
+                                noNeed = {
+                                    viewModel.chatListAdapter.clear()
+                                    setCompletion(it)
+                                }
+                            )
+                        } ?: viewModel.chatListAdapter.clear()
+                        viewModel.send(ChatModViewModel.ChatModViewEvent.NewCompletion)
+                    }
+                )
+
+            }
+        }
+    }
+
+    private inline fun startNewCompletion(
+        crossinline goSave: () -> Unit,
+        crossinline noNeed: () -> Unit
+    ) {
+        BottomSheetDialog(this).apply {
+            val dialogBinding = NewCompletionGuideDialogBinding.inflate(layoutInflater)
+            dialogBinding.goSave.setOnClickListener {
+                dismiss()
+                goSave()
+            }
+            dialogBinding.noNeed.setOnClickListener {
+                dismiss()
+                noNeed()
+            }
+            setContentView(dialogBinding.root)
+            show()
+        }
+    }
+
+    private inline fun combineCompletion(
+        crossinline combine: () -> Unit,
+        crossinline noNeed: () -> Unit
+    ) {
+        BottomSheetDialog(this).apply {
+            val dialogBinding = ContinueCompletionGuideBinding.inflate(layoutInflater)
+            dialogBinding.combine.setOnClickListener {
+                dismiss()
+                combine()
+            }
+            dialogBinding.noNeed.setOnClickListener {
+                dismiss()
+                noNeed()
+            }
+            setContentView(dialogBinding.root)
+            show()
+        }
+    }
+
+    private fun setCompletion(group: String) {
+        HistoryViewModel().run {
+            getList(group) {
+                this@ChatActivity.launch { viewModel.chatListAdapter.setList(it) }
+                viewModelScope.cancel()
+            }
         }
     }
 

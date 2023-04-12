@@ -1,6 +1,7 @@
 package com.protone.eChatGPT.mods.chat.fragment
 
 import android.animation.ObjectAnimator
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,24 +16,31 @@ import androidx.recyclerview.widget.RecyclerView
 import com.protone.eChatGPT.R
 import com.protone.eChatGPT.mods.BaseFragment
 import com.protone.eChatGPT.databinding.SaveConversationFragmentBinding
-import com.protone.eChatGPT.messenger.EventMessenger
-import com.protone.eChatGPT.messenger.EventMessengerImp
-import com.protone.eChatGPT.messenger.event.SaveConversationEvent
+import com.protone.eChatGPT.utils.messenger.EventMessenger
+import com.protone.eChatGPT.utils.messenger.EventMessengerImp
+import com.protone.eChatGPT.utils.messenger.event.SaveConversationEvent
+import com.protone.eChatGPT.mods.BaseActivityFragment
 import com.protone.eChatGPT.utils.getString
+import com.protone.eChatGPT.utils.hideSoftInput
 import com.protone.eChatGPT.utils.launchMain
 import com.protone.eChatGPT.viewModel.activityViewModel.ChatModViewModel
 import com.protone.eChatGPT.viewModel.fragViewModel.SaveChatViewModel
 
 class SaveConversationFragment :
-    BaseFragment<SaveConversationFragmentBinding, SaveChatViewModel, ChatModViewModel>(),
+    BaseActivityFragment<SaveConversationFragmentBinding, SaveChatViewModel, ChatModViewModel>(),
     EventMessenger<SaveConversationEvent> by EventMessengerImp() {
+
+    companion object {
+        const val FINISH_OPTION = "Finish_option"
+    }
 
     override val viewModel: SaveChatViewModel by viewModels()
     override val activityViewModel: ChatModViewModel by activityViewModels()
 
     override fun createView(
         inflater: LayoutInflater,
-        container: ViewGroup?
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): SaveConversationFragmentBinding {
         return SaveConversationFragmentBinding.inflate(inflater, container, false).apply {
             save.updateLayoutParams {
@@ -44,10 +52,13 @@ class SaveConversationFragment :
         }
     }
 
-    override fun SaveChatViewModel.init() {
+    override fun SaveChatViewModel.init(savedInstanceState: Bundle?) {
         saveState.observe(this@SaveConversationFragment) {
             when (it) {
-                SaveChatViewModel.SAVE_SUCCESS -> activityViewModel.send(ChatModViewModel.ChatModViewEvent.Back)
+                SaveChatViewModel.SAVE_SUCCESS -> {
+                    binding.name.hideSoftInput()
+                    activityViewModel.send(ChatModViewModel.ChatModViewEvent.Back)
+                }
                 SaveChatViewModel.SAVING -> binding.saveProgress.isVisible = true
                 SaveChatViewModel.SAVE_FAILED -> {
                     binding.saveProgress.isVisible = false
@@ -72,7 +83,10 @@ class SaveConversationFragment :
         launchMain {
             onEvent {
                 when (it) {
-                    SaveConversationEvent.Finish -> activityViewModel.send(ChatModViewModel.ChatModViewEvent.Back)
+                    SaveConversationEvent.Finish -> {
+                        binding.name.hideSoftInput()
+                        activityViewModel.send(ChatModViewModel.ChatModViewEvent.Back)
+                    }
                     SaveConversationEvent.Save -> {
                         saveConversation(
                             binding.name.text.toString(),

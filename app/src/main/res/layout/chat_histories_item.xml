@@ -5,26 +5,46 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:padding="@dimen/content_padding">
+        android:background="@drawable/white_background_ripple">
+
+        <View
+            android:id="@+id/select"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/main_color"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.028" />
 
         <TextView
             android:id="@+id/title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/item_content_margin"
-            android:letterSpacing="0.04"
+            android:layout_margin="@dimen/item_content_padding"
+            android:clickable="true"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:letterSpacing="0.06"
+            android:marqueeRepeatLimit="1"
+            android:singleLine="true"
             android:textColor="@color/text_color"
             android:textSize="@dimen/item_content_text_size"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/time"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/select"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/item_content_padding"
+            android:layout_marginEnd="@dimen/item_content_padding"
+            android:layout_marginBottom="@dimen/item_content_padding"
             android:textSize="@dimen/item_sub_content_text_size"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

@@ -12,6 +12,7 @@ import android.os.PowerManager
 import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
@@ -46,16 +47,52 @@ fun Context.requestBackgroundAlive() {
 @SuppressLint("ClickableViewAccessibility")
 fun Context.linkInput(target: View, input: View) {
     target.setOnTouchListener { _, _ ->
-        val inputManager: InputMethodManager =
-            getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        if (inputManager.isActive) {
-            inputManager.hideSoftInputFromWindow(
-                input.windowToken,
-                InputMethodManager.HIDE_NOT_ALWAYS
-            )
-        }
+        input.hideSoftInput()
         false
     }
+}
+
+fun View.hideSoftInput() {
+    val inputManager: InputMethodManager =
+        context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    if (inputManager.isActive) {
+        inputManager.hideSoftInputFromWindow(
+            this.windowToken,
+            InputMethodManager.HIDE_NOT_ALWAYS
+        )
+    }
+}
+
+fun Int.getString() = EApplication.app.getString(this)
+
+fun Int.getDimension() = EApplication.app.resources.getDimension(this)
+
+fun View.marginTop(margin: Int) {
+    if (this !is ViewGroup) return
+    val marginLayoutParams = layoutParams as ViewGroup.MarginLayoutParams
+    marginLayoutParams.topMargin += margin
+    layoutParams = marginLayoutParams
+}
+
+fun View.marginBottom(margin: Int) {
+    if (this !is ViewGroup) return
+    val marginLayoutParams = layoutParams as ViewGroup.MarginLayoutParams
+    marginLayoutParams.bottomMargin = margin
+    layoutParams = marginLayoutParams
+}
+
+fun View.marginStart(margin: Int) {
+    if (this !is ViewGroup) return
+    val marginLayoutParams = layoutParams as ViewGroup.MarginLayoutParams
+    marginLayoutParams.leftMargin = margin
+    layoutParams = marginLayoutParams
+}
+
+fun View.marginEnd(margin: Int) {
+    if (this !is ViewGroup) return
+    val marginLayoutParams = layoutParams as ViewGroup.MarginLayoutParams
+    marginLayoutParams.rightMargin = margin
+    layoutParams = marginLayoutParams
 }
 
 @Suppress("DEPRECATION")

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/chat_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/options"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.helper.widget.Flow
+            android:id="@+id/options"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/option_item_height"
+            android:background="@color/main_color"
+            app:constraint_referenced_ids="go_chat,back"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_chainStyle="packed" />
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/option_item_height"
+            android:background="?android:selectableItemBackground"
+            android:contentDescription="@string/go_back"
+            android:src="@drawable/arrow_left"
+            app:layout_constraintDimensionRatio="1:1" />
+
+        <ImageView
+            android:id="@+id/go_chat"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/option_item_height"
+            android:contentDescription="@string/continue_chat" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

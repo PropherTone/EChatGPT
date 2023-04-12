@@ -19,7 +19,7 @@ data class ChatItem(val id: String, val target: ChatTarget, val time: Long) {
 
     sealed class ChatTarget {
         data class AI(val userId: String) : ChatTarget()
-        data class HUMAN(val systemId: String? = null) : ChatTarget()
+        data class HUMAN(val systemId: String? = null, val isSystem: Boolean = false) : ChatTarget()
     }
 
     private val sb = StringBuilder()
@@ -53,7 +53,7 @@ data class ChatItem(val id: String, val target: ChatTarget, val time: Long) {
     val chatRole
         get() = when (target) {
             is ChatTarget.AI -> ChatRole.Assistant
-            is ChatTarget.HUMAN -> if (target.systemId != null) ChatRole.System else ChatRole.User
+            is ChatTarget.HUMAN -> if (target.isSystem) ChatRole.System else ChatRole.User
         }
 
     override fun toString(): String {

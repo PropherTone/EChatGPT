@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
@@ -17,9 +18,10 @@ import com.protone.eChatGPT.adapter.ChatListAdapter
 import com.protone.eChatGPT.bean.ChatItem
 import com.protone.eChatGPT.databinding.ChatDetailLayoutBinding
 import com.protone.eChatGPT.databinding.ChatFragmentBinding
-import com.protone.eChatGPT.messenger.EventMessenger
-import com.protone.eChatGPT.messenger.EventMessengerImp
-import com.protone.eChatGPT.messenger.event.ChatViewEvent
+import com.protone.eChatGPT.utils.messenger.EventMessenger
+import com.protone.eChatGPT.utils.messenger.EventMessengerImp
+import com.protone.eChatGPT.utils.messenger.event.ChatViewEvent
+import com.protone.eChatGPT.mods.BaseActivityFragment
 import com.protone.eChatGPT.mods.BaseFragment
 import com.protone.eChatGPT.utils.*
 import com.protone.eChatGPT.viewModel.activityViewModel.ChatModViewModel
@@ -27,13 +29,17 @@ import com.protone.eChatGPT.viewModel.fragViewModel.ChatViewModel
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
-class ChatFragment : BaseFragment<ChatFragmentBinding, ChatViewModel, ChatModViewModel>(),
+class ChatFragment : BaseActivityFragment<ChatFragmentBinding, ChatViewModel, ChatModViewModel>(),
     EventMessenger<ChatViewEvent> by EventMessengerImp() {
 
     override val viewModel: ChatViewModel by viewModels()
     override val activityViewModel: ChatModViewModel by activityViewModels()
 
-    override fun createView(inflater: LayoutInflater, container: ViewGroup?): ChatFragmentBinding {
+    override fun createView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): ChatFragmentBinding {
         return ChatFragmentBinding.inflate(layoutInflater, container, false).apply {
             chatInput.post {
                 chatList.marginBottom(root.measuredHeight - chatInputBox.y.roundToInt())
@@ -50,7 +56,7 @@ class ChatFragment : BaseFragment<ChatFragmentBinding, ChatViewModel, ChatModVie
     }
 
     @OptIn(BetaOpenAI::class)
-    override fun ChatViewModel.init() {
+    override fun ChatViewModel.init(savedInstanceState: Bundle?) {
         conversationState.observe(this@ChatFragment) {
             binding.chatState.isVisible = it
         }
@@ -86,8 +92,9 @@ class ChatFragment : BaseFragment<ChatFragmentBinding, ChatViewModel, ChatModVie
                         }
                     }
                     ChatViewEvent.OnSave -> {
+                        binding.chatInputBox.hideSoftInput()
                         binding.chatSave.elevation = 0f
-                        activityViewModel.send(ChatModViewModel.ChatModViewEvent.SaveConversation)
+                        activityViewModel.send(ChatModViewModel.ChatModViewEvent.SaveConversation())
                         binding.chatSave.elevation = R.dimen.option_elevation.getDimension()
                     }
                     ChatViewEvent.OnConversation -> reverseIsConversation()
@@ -102,7 +109,7 @@ class ChatFragment : BaseFragment<ChatFragmentBinding, ChatViewModel, ChatModVie
             stackFromEnd = true
         }
         adapter = activityViewModel.chatListAdapter.apply {
-            itemEvent = object : ChatListAdapter.ItemEvent {
+            setItemEvent(object : ChatListAdapter.ItemEvent {
                 override fun onRootLongClick(item: ChatItem) {
                     (activity?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?)
                         ?.setPrimaryClip(ClipData.newPlainText("chat", item.content))
@@ -117,8 +124,7 @@ class ChatFragment : BaseFragment<ChatFragmentBinding, ChatViewModel, ChatModVie
                                 ChatViewEvent.OnSendMsg(
                                     it.content.toString(),
                                     it.id,
-                                    if (it.target is ChatItem.ChatTarget.HUMAN && it.target.systemId != null)
-                                        it.target.systemId
+                                    if (it.target is ChatItem.ChatTarget.HUMAN) it.target.systemId
                                     else null
                                 )
                             )
@@ -149,7 +155,7 @@ class ChatFragment : BaseFragment<ChatFragmentBinding, ChatViewModel, ChatModVie
                         .show()
                 }
 
-            }
+            })
         }
     }
 

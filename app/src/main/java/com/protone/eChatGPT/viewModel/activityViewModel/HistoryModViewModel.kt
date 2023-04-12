@@ -2,6 +2,7 @@ package com.protone.eChatGPT.viewModel.activityViewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.protone.eChatGPT.bean.ChatHistory
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
@@ -9,8 +10,10 @@ import kotlinx.coroutines.launch
 class HistoryModViewModel : ViewModel() {
 
     sealed class HistoryViewEvent {
+        object Back : HistoryViewEvent()
         object Finish : HistoryViewEvent()
-        object ToDetail : HistoryViewEvent()
+        data class ShowChatHistory(val group: String) : HistoryViewEvent()
+        data class ContinueChat(val group: String) : HistoryViewEvent()
     }
 
     private val _eventFlow by lazy { MutableSharedFlow<HistoryViewEvent>() }

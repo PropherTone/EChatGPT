@@ -33,8 +33,8 @@ abstract class BaseActivity<VB : ViewDataBinding, VM : ViewModel> : AppCompatAct
         private set
     abstract val viewModel: VM
 
-    abstract fun createView(): VB
-    abstract fun VM.init()
+    abstract fun createView(savedInstanceState: Bundle?): VB
+    abstract fun VM.init(savedInstanceState: Bundle?)
 
     val code = AtomicInteger(0)
 
@@ -42,9 +42,9 @@ abstract class BaseActivity<VB : ViewDataBinding, VM : ViewModel> : AppCompatAct
         setTransparentClipStatusBar(AppCompatDelegate.getDefaultNightMode() == MODE_NIGHT_YES)
         super.onCreate(savedInstanceState)
         activities.add(this::class.java)
-        binding = createView().apply {
+        binding = createView(savedInstanceState).apply {
             setContentView(root)
-            root.post { viewModel.init() }
+            root.post { viewModel.init(savedInstanceState) }
         }
     }
 

@@ -1,58 +1,100 @@
 package com.protone.eChatGPT.mods.history.fragment
 
+import android.animation.Animator
+import android.animation.TimeInterpolator
+import android.animation.ValueAnimator
 import android.graphics.Rect
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.core.view.size
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.viewpager2.widget.ViewPager2
 import com.protone.eChatGPT.R
 import com.protone.eChatGPT.adapter.ChatHistoriesAdapter
 import com.protone.eChatGPT.adapter.ViewBindingHolder
+import com.protone.eChatGPT.bean.ChatHistory
 import com.protone.eChatGPT.databinding.HistoriesFragmentBinding
 import com.protone.eChatGPT.databinding.HistoriesOptionsActiveSceneBinding
 import com.protone.eChatGPT.databinding.HistoriesOptionsNormalSceneBinding
+import com.protone.eChatGPT.mods.BaseActivityFragment
 import com.protone.eChatGPT.mods.BaseFragment
 import com.protone.eChatGPT.utils.launchIO
 import com.protone.eChatGPT.utils.layoutInflater
 import com.protone.eChatGPT.viewModel.activityViewModel.HistoryModViewModel
 import com.protone.eChatGPT.viewModel.fragViewModel.HistoriesViewModel
+import kotlinx.coroutines.launch
 
 class HistoriesFragment :
-    BaseFragment<HistoriesFragmentBinding, HistoriesViewModel, HistoryModViewModel>() {
+    BaseActivityFragment<HistoriesFragmentBinding, HistoriesViewModel, HistoryModViewModel>() {
     override val viewModel: HistoriesViewModel by viewModels()
     override val activityViewModel: HistoryModViewModel by activityViewModels()
 
-    private var chatHistoriesAdapter: ChatHistoriesAdapter? = null
+    companion object {
+        const val SWAP_DURATION = 300L
+        const val PAGE_SIZE = 20
+    }
 
     override fun createView(
         inflater: LayoutInflater,
-        container: ViewGroup?
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): HistoriesFragmentBinding {
         return HistoriesFragmentBinding.inflate(inflater, container, false).apply {
             historyList.init()
-            options.init()
+            options.init(
+                normal = {
+                    it.root.setOnClickListener {
+                        activityViewModel.send(HistoryModViewModel.HistoryViewEvent.Finish)
+                    }
+                },
+                active = {
+                    it.delete.setOnClickListener {
+                        viewModel.deleteChatHistories()
+                    }
+                    it.exit.setOnClickListener {
+                        viewModel.chatHistoriesAdapter.exitSelectMode()
+                        options.setCurrentItem(0, SWAP_DURATION)
+                    }
+                }
+            )
         }
     }
 
-    override fun HistoriesViewModel.init() {
-        chatHistoriesAdapter?.refresh() ?: launchIO {
-            getHistoryPagingSource(20).flow.collect {
-                chatHistoriesAdapter?.submitData(it)
+    override fun HistoriesViewModel.init(savedInstanceState: Bundle?) {
+        if (savedInstanceState != null) chatHistoriesAdapter.refresh() else {
+            chatHistoriesAdapter.setOnItemEvent(object : ChatHistoriesAdapter.ItemEvent {
+                override fun enterSelectMode() {
+                    binding.options.setCurrentItem(1, SWAP_DURATION)
+                }
+
+                override fun exitSelectMode() {
+                    binding.options.setCurrentItem(0, SWAP_DURATION)
+                }
+
+                override fun itemClicked(item: ChatHistory) {
+                    activityViewModel.send(HistoryModViewModel.HistoryViewEvent.ShowChatHistory(item.group))
+                }
+
+            })
+            launchIO {
+                getHistoryPagingSource(PAGE_SIZE).flow.collect {
+                    chatHistoriesAdapter.submitData(it)
+                }
             }
         }
     }
 
     private fun RecyclerView.init() {
         layoutManager = LinearLayoutManager(activity)
-        chatHistoriesAdapter = ChatHistoriesAdapter()
-        adapter = chatHistoriesAdapter
+        adapter = viewModel.chatHistoriesAdapter
         addItemDecoration(object : RecyclerView.ItemDecoration() {
             override fun getItemOffsets(
                 outRect: Rect,
@@ -73,12 +115,15 @@ class HistoriesFragment :
         })
     }
 
-    private fun ViewPager2.init() {
-        adapter = object : Adapter<ViewBindingHolder<ViewDataBinding>>() {
+    private fun ViewPager2.init(
+        normal: (HistoriesOptionsNormalSceneBinding) -> Unit,
+        active: (HistoriesOptionsActiveSceneBinding) -> Unit
+    ) {
+        isUserInputEnabled = false
+        orientation = ViewPager2.ORIENTATION_VERTICAL
+        adapter = object : RecyclerView.Adapter<ViewBindingHolder<ViewDataBinding>>() {
 
-            override fun getItemViewType(position: Int): Int {
-                return position
-            }
+            override fun getItemViewType(position: Int): Int = position
 
             override fun onCreateViewHolder(
                 parent: ViewGroup,
@@ -106,17 +151,60 @@ class HistoriesFragment :
                 holder.binding.apply {
                     when (this) {
                         is HistoriesOptionsNormalSceneBinding -> {
-                            root.setOnClickListener {
-                                activityViewModel.send(HistoryModViewModel.HistoryViewEvent.Finish)
-                            }
+                            normal(this)
                         }
                         is HistoriesOptionsActiveSceneBinding -> {
-                            
+                            active(this)
                         }
                     }
                 }
             }
 
+        }
+    }
+
+    private fun ViewPager2.setCurrentItem(
+        item: Int,
+        duration: Long,
+        interpolator: TimeInterpolator = AccelerateDecelerateInterpolator(),
+        pagePxWidth: Int = width
+    ) {
+        val pxToDrag: Int = pagePxWidth * (item - currentItem)
+        var previousValue = 0
+        ValueAnimator.ofInt(0, pxToDrag).apply {
+            addUpdateListener { valueAnimator ->
+                val currentValue = valueAnimator.animatedValue as Int
+                val currentPxToDrag = (currentValue - previousValue).toFloat()
+                fakeDragBy(-currentPxToDrag)
+                previousValue = currentValue
+            }
+            addListener(object : Animator.AnimatorListener {
+                override fun onAnimationStart(animation: Animator) {
+                    beginFakeDrag()
+                }
+
+                override fun onAnimationEnd(animation: Animator) {
+                    endFakeDrag()
+                }
+
+                override fun onAnimationCancel(animation: Animator) = Unit
+                override fun onAnimationRepeat(animation: Animator) = Unit
+            })
+            this.interpolator = interpolator
+            this.duration = duration
+            start()
+        }
+    }
+
+    private fun HistoriesViewModel.deleteChatHistories() {
+        chatHistoriesAdapter.delete { items ->
+            deleteChatHistory(items) { result ->
+                launch {
+                    chatHistoriesAdapter
+                        .submitData(PagingData.from(result.toList()))
+                    chatHistoriesAdapter.exitSelectMode()
+                }
+            }
         }
     }
 
