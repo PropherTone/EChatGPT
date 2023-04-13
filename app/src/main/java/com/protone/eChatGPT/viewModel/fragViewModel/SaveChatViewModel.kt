@@ -19,12 +19,17 @@ class SaveChatViewModel : ViewModel() {
         const val SAVING = "ON_SAVING"
         const val SAVE_FAILED = "SAVE_FAILED"
         const val NAME_CONFLICT = "NAME_CONFLICT"
+        const val EMPTY_CONTENT = "EMPTY_CONTENT"
     }
 
     private val _saveState = MutableLiveData<String>()
     val saveState: LiveData<String> get() = _saveState
 
     fun saveConversation(name: String, data: Collection<ChatItem>) {
+        if (name.isEmpty()) {
+            _saveState.postValue(EMPTY_CONTENT)
+            return
+        }
         _saveState.postValue(SAVING)
         viewModelScope.launchIO saveJob@{
             if (chatHistoryDAO.getChatHistoryCountByName(name) > 0) {

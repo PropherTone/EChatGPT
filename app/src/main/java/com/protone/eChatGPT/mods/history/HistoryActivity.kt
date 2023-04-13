@@ -36,6 +36,7 @@ class HistoryActivity : BaseActivity<HistoryActivityBinding, HistoryModViewModel
                         )
                     }
                     is HistoryModViewModel.HistoryViewEvent.ContinueChat -> {
+                        navController.popBackStack()
                         startActivity(
                             ChatActivity::class.intent
                                 .putExtra(ChatActivity.OPTION, "")

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="IconView">
+        <attr name="iconSrc" format="reference" />
+        <attr name="iconText" format="string" />
+        <attr name="iconBackground" format="reference|color" />
+        <attr name="iconBackgroundTint" format="color" />
+        <attr name="iconTextColor" format="color" />
+        <attr name="iconTextBackgroundTint" format="color" />
+        <attr name="iconViewBackgroundTint" format="color" />
+        <attr name="iconLetterSpacing" format="float" />
+        <attr name="iconPadding" format="dimension" />
+        <attr name="iconAutoPadding" format="boolean" />
+        <attr name="iconTextMargin" format="dimension" />
+        <attr name="iconTextPadding" format="dimension" />
+        <attr name="iconTextSize" format="dimension" />
+        <attr name="iconTextStyle">
+            <flag name="normal" value="0" />
+            <flag name="bold" value="1" />
+            <flag name="italic" value="2" />
+        </attr>
+    </declare-styleable>
+</resources>

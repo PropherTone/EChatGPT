@@ -33,7 +33,13 @@
     <string name="continue_chat">Continue chat</string>
     <string name="no_need">No need</string>
     <string name="go_save">Go save</string>
-    <string name="new_completion_guide">Save completion before starting a new one?</string>
-    <string name="continue_completion_guide">Combine completion?</string>
+    <string name="new_chat_guide">Save chat before starting a new one?</string>
+    <string name="continue_chat_guide">Combine chat?</string>
     <string name="combine">Combine</string>
+    <string name="chat">Chat</string>
+    <string name="image">Image</string>
+    <string name="back_to_chat">Back to chat</string>
+    <string name="back_to_image">Back to image</string>
+    <string name="empty_notify">Can\'t be empty</string>
+    <string name="no_content">No content</string>
 </resources>

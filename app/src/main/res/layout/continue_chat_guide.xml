@@ -4,17 +4,16 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/white">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/option_item_height"
             android:gravity="center_horizontal"
             android:letterSpacing="0.06"
             android:padding="@dimen/content_padding"
-            android:text="@string/continue_completion_guide"
+            android:text="@string/continue_chat_guide"
             android:textColor="@color/text_color"
             android:textSize="24sp"
             app:layout_constraintBottom_toTopOf="@id/combine"
@@ -22,7 +21,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/combine"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="@dimen/option_item_height"
             android:background="@color/main_color"
             android:text="@string/combine"
@@ -30,13 +29,11 @@
             android:textStyle="bold"
             app:backgroundTint="@color/main_color"
             app:cornerRadius="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/no_need"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintBottom_toTopOf="@id/no_need" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/no_need"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="@dimen/option_item_height"
             android:background="@color/red_smooth"
             android:text="@string/no_need"
@@ -44,9 +41,7 @@
             android:textStyle="bold"
             app:backgroundTint="@color/red_smooth"
             app:cornerRadius="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/combine" />
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

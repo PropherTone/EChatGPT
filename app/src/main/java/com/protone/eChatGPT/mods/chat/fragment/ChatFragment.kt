@@ -91,11 +91,13 @@ class ChatFragment : BaseActivityFragment<ChatFragmentBinding, ChatViewModel, Ch
                             }
                         }
                     }
-                    ChatViewEvent.OnSave -> {
-                        binding.chatInputBox.hideSoftInput()
-                        binding.chatSave.elevation = 0f
-                        activityViewModel.send(ChatModViewModel.ChatModViewEvent.SaveConversation())
-                        binding.chatSave.elevation = R.dimen.option_elevation.getDimension()
+                    ChatViewEvent.OnSave -> binding.apply {
+                        chatInputBox.hideSoftInput()
+                        chatSave.elevation = 0f
+                        if (activityViewModel.chatListAdapter.getData().isEmpty()) {
+                            R.string.no_content.getString().toast()
+                        } else activityViewModel.send(ChatModViewModel.ChatModViewEvent.SaveConversation())
+                        chatSave.elevation = R.dimen.option_elevation.getDimension()
                     }
                     ChatViewEvent.OnConversation -> reverseIsConversation()
                     ChatViewEvent.OnSystem -> reverseIsSystem()

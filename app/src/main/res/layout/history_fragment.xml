@@ -26,17 +26,24 @@
         <ImageView
             android:id="@+id/back"
             android:layout_width="0dp"
+            app:layout_constraintWidth_percent="0.16"
             android:layout_height="@dimen/option_item_height"
             android:background="?android:selectableItemBackground"
             android:contentDescription="@string/go_back"
-            android:src="@drawable/arrow_left"
-            app:layout_constraintDimensionRatio="1:1" />
+            android:elevation="@dimen/option_elevation"
+            android:padding="@dimen/option_content_padding"
+            android:src="@drawable/arrow_left" />
 
-        <ImageView
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/go_chat"
             android:layout_width="0dp"
             android:layout_height="@dimen/option_item_height"
-            android:contentDescription="@string/continue_chat" />
+            android:background="@color/main_color"
+            android:gravity="center"
+            android:letterSpacing="0.08"
+            android:text="@string/continue_chat"
+            android:textColor="@color/text_color_light"
+            android:textStyle="bold" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

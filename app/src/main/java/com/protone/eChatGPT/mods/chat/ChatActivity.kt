@@ -1,5 +1,6 @@
 package com.protone.eChatGPT.mods.chat
 
+import android.app.ActivityManager
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
@@ -9,8 +10,8 @@ import androidx.navigation.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.protone.eChatGPT.R
 import com.protone.eChatGPT.databinding.ChatActivityBinding
-import com.protone.eChatGPT.databinding.ContinueCompletionGuideBinding
-import com.protone.eChatGPT.databinding.NewCompletionGuideDialogBinding
+import com.protone.eChatGPT.databinding.ContinueChatGuideBinding
+import com.protone.eChatGPT.databinding.NewChatGuideDialogBinding
 import com.protone.eChatGPT.mods.BaseActivity
 import com.protone.eChatGPT.mods.chat.fragment.SaveConversationFragment
 import com.protone.eChatGPT.mods.menu.MenuActivity
@@ -78,7 +79,7 @@ class ChatActivity : BaseActivity<ChatActivityBinding, ChatModViewModel>(),
                         })
                         overridePendingTransition(R.anim.card_top_in, R.anim.card_top_out)
                     }
-                    ChatModViewModel.ChatModViewEvent.NewCompletion -> {
+                    ChatModViewModel.ChatModViewEvent.NewChat -> {
 
                         navController.popBackStack()
                         navController.navigate(R.id.chatFragment)
@@ -92,36 +93,41 @@ class ChatActivity : BaseActivity<ChatActivityBinding, ChatModViewModel>(),
         super.onNewIntent(intent)
         intent?.apply {
             getStringExtra(OPTION)?.run {
-                startNewCompletion(
+                fun continueChat() {
+                    getStringExtra(GROUP)?.let {
+                        combineChat(
+                            combine = { setChat(it) },
+                            noNeed = {
+                                viewModel.chatListAdapter.clear()
+                                setChat(it)
+                            }
+                        )
+                    } ?: viewModel.chatListAdapter.clear()
+                    viewModel.send(ChatModViewModel.ChatModViewEvent.NewChat)
+                }
+                if (viewModel.chatListAdapter.getData().isEmpty()) {
+                    continueChat()
+                    return@run
+                }
+                startNewChat(
                     goSave = {
                         viewModel.send(ChatModViewModel.ChatModViewEvent.SaveConversation(true))
                     },
-                    noNeed = {
-                        getStringExtra(GROUP)?.let {
-                            combineCompletion(
-                                combine = {
-                                    setCompletion(it)
-                                },
-                                noNeed = {
-                                    viewModel.chatListAdapter.clear()
-                                    setCompletion(it)
-                                }
-                            )
-                        } ?: viewModel.chatListAdapter.clear()
-                        viewModel.send(ChatModViewModel.ChatModViewEvent.NewCompletion)
-                    }
+                    noNeed = { continueChat() }
                 )
 
             }
         }
     }
 
-    private inline fun startNewCompletion(
+    private inline fun startNewChat(
         crossinline goSave: () -> Unit,
         crossinline noNeed: () -> Unit
     ) {
         BottomSheetDialog(this).apply {
-            val dialogBinding = NewCompletionGuideDialogBinding.inflate(layoutInflater)
+            setCanceledOnTouchOutside(false)
+            setCancelable(false)
+            val dialogBinding = NewChatGuideDialogBinding.inflate(layoutInflater)
             dialogBinding.goSave.setOnClickListener {
                 dismiss()
                 goSave()
@@ -135,12 +141,14 @@ class ChatActivity : BaseActivity<ChatActivityBinding, ChatModViewModel>(),
         }
     }
 
-    private inline fun combineCompletion(
+    private inline fun combineChat(
         crossinline combine: () -> Unit,
         crossinline noNeed: () -> Unit
     ) {
         BottomSheetDialog(this).apply {
-            val dialogBinding = ContinueCompletionGuideBinding.inflate(layoutInflater)
+            setCanceledOnTouchOutside(false)
+            setCancelable(false)
+            val dialogBinding = ContinueChatGuideBinding.inflate(layoutInflater)
             dialogBinding.combine.setOnClickListener {
                 dismiss()
                 combine()
@@ -154,7 +162,7 @@ class ChatActivity : BaseActivity<ChatActivityBinding, ChatModViewModel>(),
         }
     }
 
-    private fun setCompletion(group: String) {
+    private fun setChat(group: String) {
         HistoryViewModel().run {
             getList(group) {
                 this@ChatActivity.launch { viewModel.chatListAdapter.setList(it) }

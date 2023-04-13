@@ -23,8 +23,13 @@ class ChatListEditAdapter : ChatListAdapter() {
             content.setOnLongClickListener {
                 val binding = DeleteDialogLayoutBinding.inflate(root.context.layoutInflater)
                 BottomSheetDialog(root.context).apply {
+                    setCanceledOnTouchOutside(false)
+                    setCancelable(false)
                     binding.confirm.setOnClickListener {
-                        editItemEvent?.delete(holder.layoutPosition,getChatItem(holder.layoutPosition))
+                        editItemEvent?.delete(
+                            holder.layoutPosition,
+                            getChatItem(holder.layoutPosition)
+                        )
                         dismiss()
                     }
                     binding.cancel.setOnClickListener {

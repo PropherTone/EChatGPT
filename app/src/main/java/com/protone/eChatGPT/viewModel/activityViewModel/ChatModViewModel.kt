@@ -13,7 +13,7 @@ class ChatModViewModel : ViewModel() {
         data class SaveConversation(val startNewAfterSaved: Boolean= false) : ChatModViewEvent()
         object Back : ChatModViewEvent()
         object BackToMenu : ChatModViewEvent()
-        object NewCompletion : ChatModViewEvent()
+        object NewChat : ChatModViewEvent()
     }
 
     private val _eventFlow by lazy { MutableSharedFlow<ChatModViewEvent>() }

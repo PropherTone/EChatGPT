@@ -4,10 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
     <application
@@ -20,6 +18,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EChatGPT"
         tools:targetApi="31">
+        <activity
+            android:name=".mods.image.ImageActivity"
+            android:exported="false"
+            android:launchMode="singleInstance"
+            android:taskAffinity="con.protone.eChatGPT.completion" />
         <activity
             android:name=".mods.chat.ChatActivity"
             android:exported="true"
@@ -35,7 +38,6 @@
             android:name=".mods.menu.MenuActivity"
             android:launchMode="singleInstance"
             android:taskAffinity="com.protone.eChatGPT.menu" />
-
         <activity android:name=".mods.history.HistoryActivity" />
 
         <service android:name=".service.ChatService" />

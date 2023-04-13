@@ -5,56 +5,221 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white">
+        android:background="@color/white"
+        android:fitsSystemWindows="true">
 
         <TextView
-            android:id="@+id/back"
-            android:layout_width="match_parent"
+            android:id="@+id/back_Chat"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@drawable/main_color_background_ripple"
-            android:fitsSystemWindows="true"
             android:gravity="center"
-            android:paddingStart="@dimen/content_padding"
-            android:paddingEnd="@dimen/content_padding"
-            android:paddingBottom="@dimen/content_padding"
+            android:padding="@dimen/option_content_padding"
+            android:text="@string/back_to_chat"
             android:textColor="@color/text_color_light"
             android:textStyle="bold"
+            android:visibility="gone"
+            app:drawableStartCompat="@drawable/arrow_right" />
+
+        <TextView
+            android:id="@+id/back_Image"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/main_color_background_ripple"
+            android:gravity="center"
+            android:padding="@dimen/option_content_padding"
+            android:text="@string/back_to_image"
+            android:textColor="@color/text_color_light"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:drawableStartCompat="@drawable/arrow_right"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/completion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/completion"
-            android:textColor="@color/text_color_light"
-            app:icon="@drawable/chat"
-            app:iconGravity="top"
-            app:iconPadding="@dimen/option_content_text_padding"
-            app:iconTint="@color/white" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/history"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/history"
-            android:textColor="@color/text_color_light"
-            app:icon="@drawable/history"
-            app:iconGravity="top"
-            app:iconPadding="@dimen/option_content_text_padding"
-            app:iconTint="@color/white" />
-
         <androidx.constraintlayout.helper.widget.Flow
-            android:layout_width="match_parent"
+            android:id="@+id/back_options"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:constraint_referenced_ids="completion,history"
-            app:flow_wrapMode="chain"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:orientation="vertical"
+            android:padding="@dimen/option_content_margin"
+            app:constraint_referenced_ids="back_Chat,back_Image"
+            app:flow_verticalGap="@dimen/option_content_margin"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/back"
-            app:layout_constraintVertical_bias="0.08" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.8" />
+
+        <com.protone.eChatGPT.view.IconView
+            android:id="@+id/chat"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:iconAutoPadding="true"
+            app:iconBackground="@drawable/main_color_background_ripple"
+            app:iconLetterSpacing="0.08"
+            app:iconSrc="@drawable/chat"
+            app:iconText="@string/chat"
+            app:iconTextColor="@color/black"
+            app:iconTextMargin="@dimen/option_content_margin"
+            app:iconTextStyle="bold"
+            app:iconViewBackgroundTint="@color/content_white" />
+
+        <com.protone.eChatGPT.view.IconView
+            android:id="@+id/history"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:iconAutoPadding="true"
+            app:iconBackground="@drawable/main_color_background_ripple"
+            app:iconLetterSpacing="0.08"
+            app:iconSrc="@drawable/history"
+            app:iconText="@string/history"
+            app:iconTextColor="@color/black"
+            app:iconTextMargin="@dimen/option_content_margin"
+            app:iconTextStyle="bold"
+            app:iconViewBackgroundTint="@color/content_white" />
+
+        <com.protone.eChatGPT.view.IconView
+            android:id="@+id/configs"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:iconAutoPadding="true"
+            app:iconBackground="@drawable/main_color_background_ripple"
+            app:iconLetterSpacing="0.08"
+            app:iconSrc="@drawable/chart"
+            app:iconText="@string/history"
+            app:iconTextColor="@color/black"
+            app:iconTextMargin="@dimen/option_content_margin"
+            app:iconTextStyle="bold"
+            app:iconViewBackgroundTint="@color/content_white" />
+
+        <com.protone.eChatGPT.view.IconView
+            android:id="@+id/image"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:iconAutoPadding="true"
+            app:iconBackground="@drawable/main_color_background_ripple"
+            app:iconLetterSpacing="0.08"
+            app:iconSrc="@drawable/image"
+            app:iconText="@string/image"
+            app:iconTextMargin="@dimen/option_content_margin"
+            app:iconTextStyle="bold"
+            app:iconViewBackgroundTint="@color/content_white" />
+
+        <com.protone.eChatGPT.view.IconView
+            android:id="@+id/audio"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:iconAutoPadding="true"
+            app:iconBackground="@drawable/main_color_background_ripple"
+            app:iconLetterSpacing="0.08"
+            app:iconSrc="@drawable/audio"
+            app:iconText="@string/image"
+            app:iconTextMargin="@dimen/option_content_margin"
+            app:iconTextStyle="bold"
+            app:iconViewBackgroundTint="@color/content_white" />
+
+        <com.protone.eChatGPT.view.IconView
+            android:id="@+id/completions"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:iconAutoPadding="true"
+            app:iconBackground="@drawable/main_color_background_ripple"
+            app:iconLetterSpacing="0.08"
+            app:iconSrc="@drawable/image"
+            app:iconText="@string/image"
+            app:iconTextMargin="@dimen/option_content_margin"
+            app:iconTextStyle="bold"
+            app:iconViewBackgroundTint="@color/content_white" />
+
+        <com.protone.eChatGPT.view.IconView
+            android:id="@+id/edits"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:iconAutoPadding="true"
+            app:iconBackground="@drawable/main_color_background_ripple"
+            app:iconLetterSpacing="0.08"
+            app:iconSrc="@drawable/image"
+            app:iconText="@string/image"
+            app:iconTextMargin="@dimen/option_content_margin"
+            app:iconTextStyle="bold"
+            app:iconViewBackgroundTint="@color/content_white" />
+
+        <com.protone.eChatGPT.view.IconView
+            android:id="@+id/files"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:iconAutoPadding="true"
+            app:iconBackground="@drawable/main_color_background_ripple"
+            app:iconLetterSpacing="0.08"
+            app:iconSrc="@drawable/image"
+            app:iconText="@string/image"
+            app:iconTextMargin="@dimen/option_content_margin"
+            app:iconTextStyle="bold"
+            app:iconViewBackgroundTint="@color/content_white" />
+
+        <com.protone.eChatGPT.view.IconView
+            android:id="@+id/fineTunes"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:iconAutoPadding="true"
+            app:iconBackground="@drawable/main_color_background_ripple"
+            app:iconLetterSpacing="0.08"
+            app:iconSrc="@drawable/image"
+            app:iconText="@string/image"
+            app:iconTextMargin="@dimen/option_content_margin"
+            app:iconTextStyle="bold"
+            app:iconViewBackgroundTint="@color/content_white" />
+
+        <com.protone.eChatGPT.view.IconView
+            android:id="@+id/models"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:iconAutoPadding="true"
+            app:iconBackground="@drawable/main_color_background_ripple"
+            app:iconLetterSpacing="0.08"
+            app:iconSrc="@drawable/image"
+            app:iconText="@string/image"
+            app:iconTextMargin="@dimen/option_content_margin"
+            app:iconTextStyle="bold"
+            app:iconViewBackgroundTint="@color/content_white" />
+
+        <com.protone.eChatGPT.view.IconView
+            android:id="@+id/moderations"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:iconAutoPadding="true"
+            app:iconBackground="@drawable/main_color_background_ripple"
+            app:iconLetterSpacing="0.08"
+            app:iconSrc="@drawable/image"
+            app:iconText="@string/image"
+            app:iconTextMargin="@dimen/option_content_margin"
+            app:iconTextStyle="bold"
+            app:iconViewBackgroundTint="@color/content_white" />
+
+        <com.protone.eChatGPT.view.IconView
+            android:id="@+id/embeddings"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:iconAutoPadding="true"
+            app:iconBackground="@drawable/main_color_background_ripple"
+            app:iconLetterSpacing="0.08"
+            app:iconSrc="@drawable/image"
+            app:iconText="@string/image"
+            app:iconTextMargin="@dimen/option_content_margin"
+            app:iconTextStyle="bold"
+            app:iconViewBackgroundTint="@color/content_white" />
+
+        <androidx.constraintlayout.helper.widget.Flow
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/menu_margin"
+            android:layout_marginEnd="@dimen/menu_margin"
+            app:constraint_referenced_ids="chat,history,configs,image,audio,completions,edits,embeddings,files,fineTunes,models,moderations"
+            app:flow_horizontalGap="@dimen/option_content_margin"
+            app:flow_verticalGap="@dimen/option_content_margin"
+            app:flow_maxElementsWrap="3"
+            app:flow_wrapMode="chain"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/back_options" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

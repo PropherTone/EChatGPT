@@ -23,6 +23,7 @@ import com.protone.eChatGPT.mods.BaseActivityFragment
 import com.protone.eChatGPT.utils.getString
 import com.protone.eChatGPT.utils.hideSoftInput
 import com.protone.eChatGPT.utils.launchMain
+import com.protone.eChatGPT.utils.toast
 import com.protone.eChatGPT.viewModel.activityViewModel.ChatModViewModel
 import com.protone.eChatGPT.viewModel.fragViewModel.SaveChatViewModel
 
@@ -63,20 +64,17 @@ class SaveConversationFragment :
                 SaveChatViewModel.SAVE_FAILED -> {
                     binding.saveProgress.isVisible = false
                     binding.state.errorWarning(R.color.main_color)
-                    Toast.makeText(
-                        context,
-                        R.string.save_failed.getString(),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    R.string.save_failed.getString().toast()
                 }
                 SaveChatViewModel.NAME_CONFLICT -> {
                     binding.saveProgress.isVisible = false
                     binding.name.errorWarning(R.color.white)
-                    Toast.makeText(
-                        context,
-                        R.string.name_conflict.getString(),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    R.string.name_conflict.getString().toast()
+                }
+                SaveChatViewModel.EMPTY_CONTENT -> {
+                    binding.saveProgress.isVisible = false
+                    binding.name.errorWarning(R.color.white)
+                    R.string.empty_notify.getString().toast()
                 }
             }
         }
