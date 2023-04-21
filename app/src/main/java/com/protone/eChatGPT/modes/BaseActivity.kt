@@ -1,4 +1,4 @@
-package com.protone.eChatGPT.mods
+package com.protone.eChatGPT.modes
 
 import android.app.Activity
 import android.content.Intent

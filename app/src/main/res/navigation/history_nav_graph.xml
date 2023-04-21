@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/historiesFragment"
-        android:name="com.protone.eChatGPT.mods.history.fragment.HistoriesFragment"
+        android:name="com.protone.eChatGPT.modes.history.fragment.HistoriesFragment"
         android:label="HistoriesFragment" >
         <action
             android:id="@+id/action_historiesFragment_to_historyFragment"
@@ -14,6 +14,6 @@
     </fragment>
     <fragment
         android:id="@+id/historyFragment"
-        android:name="com.protone.eChatGPT.mods.history.fragment.HistoryFragment"
+        android:name="com.protone.eChatGPT.modes.history.fragment.HistoryFragment"
         android:label="HistoryFragment" />
 </navigation>

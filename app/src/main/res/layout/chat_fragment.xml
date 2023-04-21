@@ -8,7 +8,7 @@
         android:layout_height="match_parent"
         android:background="@color/content_white"
         android:fitsSystemWindows="true"
-        tools:context=".mods.chat.ChatActivity">
+        tools:context=".modes.chat.ChatActivity">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/chat_list"

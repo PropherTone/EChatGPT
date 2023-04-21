@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/chatFragment"
-        android:name="com.protone.eChatGPT.mods.chat.fragment.ChatFragment"
+        android:name="com.protone.eChatGPT.modes.chat.fragment.ChatFragment"
         android:label="ChatFragment" >
         <action
             android:id="@+id/action_chatFragment_to_saveConversationActivity"
@@ -19,6 +19,6 @@
     </fragment>
     <fragment
         android:id="@+id/saveConversationActivity"
-        android:name="com.protone.eChatGPT.mods.chat.fragment.SaveConversationFragment"
+        android:name="com.protone.eChatGPT.modes.chat.fragment.SaveConversationFragment"
         android:label="SaveConversationActivity" />
 </navigation>

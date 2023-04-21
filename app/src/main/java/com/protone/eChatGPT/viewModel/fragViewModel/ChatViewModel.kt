@@ -1,5 +1,6 @@
 package com.protone.eChatGPT.viewModel.fragViewModel
 
+import android.content.pm.PackageManager
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

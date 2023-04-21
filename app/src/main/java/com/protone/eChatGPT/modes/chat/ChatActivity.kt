@@ -1,6 +1,5 @@
-package com.protone.eChatGPT.mods.chat
+package com.protone.eChatGPT.modes.chat
 
-import android.app.ActivityManager
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
@@ -12,9 +11,9 @@ import com.protone.eChatGPT.R
 import com.protone.eChatGPT.databinding.ChatActivityBinding
 import com.protone.eChatGPT.databinding.ContinueChatGuideBinding
 import com.protone.eChatGPT.databinding.NewChatGuideDialogBinding
-import com.protone.eChatGPT.mods.BaseActivity
-import com.protone.eChatGPT.mods.chat.fragment.SaveConversationFragment
-import com.protone.eChatGPT.mods.menu.MenuActivity
+import com.protone.eChatGPT.modes.BaseActivity
+import com.protone.eChatGPT.modes.chat.fragment.SaveConversationFragment
+import com.protone.eChatGPT.modes.menu.MenuActivity
 import com.protone.eChatGPT.repository.userConfig
 import com.protone.eChatGPT.service.ChatService
 import com.protone.eChatGPT.utils.intent

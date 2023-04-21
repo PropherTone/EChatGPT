@@ -8,7 +8,6 @@ import com.aallam.openai.client.OpenAI
 import com.aallam.openai.client.OpenAIConfig
 import com.protone.eChatGPT.R
 import com.protone.eChatGPT.bean.ChatItem
-import com.protone.eChatGPT.mods.TAG
 import com.protone.eChatGPT.utils.bufferCollect
 import com.protone.eChatGPT.utils.doWithTimeout
 import com.protone.eChatGPT.utils.getString

@@ -1,4 +1,4 @@
-package com.protone.eChatGPT.mods.chat.fragment
+package com.protone.eChatGPT.modes.chat.fragment
 
 import android.app.AlertDialog
 import android.content.ClipData
@@ -21,8 +21,7 @@ import com.protone.eChatGPT.databinding.ChatFragmentBinding
 import com.protone.eChatGPT.utils.messenger.EventMessenger
 import com.protone.eChatGPT.utils.messenger.EventMessengerImp
 import com.protone.eChatGPT.utils.messenger.event.ChatViewEvent
-import com.protone.eChatGPT.mods.BaseActivityFragment
-import com.protone.eChatGPT.mods.BaseFragment
+import com.protone.eChatGPT.modes.BaseActivityFragment
 import com.protone.eChatGPT.utils.*
 import com.protone.eChatGPT.viewModel.activityViewModel.ChatModViewModel
 import com.protone.eChatGPT.viewModel.fragViewModel.ChatViewModel

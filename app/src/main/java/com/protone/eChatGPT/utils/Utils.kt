@@ -3,13 +3,10 @@ package com.protone.eChatGPT.utils
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import com.protone.eChatGPT.EApplication
-import com.protone.eChatGPT.mods.TAG
+import com.protone.eChatGPT.modes.TAG
 import kotlinx.coroutines.*
-import java.io.File
 
 fun String.toast() {
     Toast.makeText(EApplication.app, this, Toast.LENGTH_SHORT).show()

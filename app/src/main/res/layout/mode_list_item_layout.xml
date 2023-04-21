@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.protone.eChatGPT.view.IconView
+        android:id="@+id/icon"
+        app:iconAutoPadding="true"
+        app:iconBackground="@drawable/main_color_background_ripple"
+        app:iconLetterSpacing="0.08"
+        app:iconSrc="@drawable/chat"
+        app:iconText="@string/chat"
+        app:iconTextColor="@color/black"
+        app:iconTextMargin="@dimen/option_content_margin"
+        app:iconTextStyle="bold"
+        app:iconViewBackgroundTint="@color/content_white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</layout>

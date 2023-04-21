@@ -1,4 +1,4 @@
-package com.protone.eChatGPT.mods.history.fragment
+package com.protone.eChatGPT.modes.history.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.protone.eChatGPT.adapter.ChatListEditAdapter
 import com.protone.eChatGPT.bean.ChatItem
 import com.protone.eChatGPT.databinding.HistoryFragmentBinding
-import com.protone.eChatGPT.mods.BaseActivityFragment
+import com.protone.eChatGPT.modes.BaseActivityFragment
 import com.protone.eChatGPT.viewModel.activityViewModel.HistoryModViewModel
 import com.protone.eChatGPT.viewModel.fragViewModel.HistoryViewModel
 import kotlinx.coroutines.launch

@@ -6,6 +6,7 @@ import android.graphics.Typeface
 import android.util.AttributeSet
 import android.view.Gravity
 import android.widget.FrameLayout
+import androidx.annotation.DrawableRes
 import androidx.core.view.setMargins
 import androidx.core.view.setPadding
 import com.google.android.material.button.MaterialButton
@@ -66,6 +67,16 @@ class IconView @JvmOverloads constructor(
                 icon.background = it.getDrawable(R.styleable.IconView_iconBackground)
             }
         }.recycle()
+    }
+
+    var text
+        get() = binding.text.text
+        set(value) {
+            binding.text.text = value
+        }
+
+    fun setImageResource(@DrawableRes idRes: Int) {
+        binding.icon.setImageResource(idRes)
     }
 
 }

@@ -1,13 +1,13 @@
-package com.protone.eChatGPT.mods.history
+package com.protone.eChatGPT.modes.history
 
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.navigation.findNavController
 import com.protone.eChatGPT.R
 import com.protone.eChatGPT.databinding.HistoryActivityBinding
-import com.protone.eChatGPT.mods.BaseActivity
-import com.protone.eChatGPT.mods.chat.ChatActivity
-import com.protone.eChatGPT.mods.history.fragment.HistoryFragment
+import com.protone.eChatGPT.modes.BaseActivity
+import com.protone.eChatGPT.modes.chat.ChatActivity
+import com.protone.eChatGPT.modes.history.fragment.HistoryFragment
 import com.protone.eChatGPT.utils.intent
 import com.protone.eChatGPT.utils.launchMain
 import com.protone.eChatGPT.viewModel.activityViewModel.HistoryModViewModel

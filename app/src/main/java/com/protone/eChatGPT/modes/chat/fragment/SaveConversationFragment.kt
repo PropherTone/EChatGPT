@@ -1,11 +1,10 @@
-package com.protone.eChatGPT.mods.chat.fragment
+package com.protone.eChatGPT.modes.chat.fragment
 
 import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.annotation.ColorRes
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
@@ -14,12 +13,11 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.protone.eChatGPT.R
-import com.protone.eChatGPT.mods.BaseFragment
 import com.protone.eChatGPT.databinding.SaveConversationFragmentBinding
 import com.protone.eChatGPT.utils.messenger.EventMessenger
 import com.protone.eChatGPT.utils.messenger.EventMessengerImp
 import com.protone.eChatGPT.utils.messenger.event.SaveConversationEvent
-import com.protone.eChatGPT.mods.BaseActivityFragment
+import com.protone.eChatGPT.modes.BaseActivityFragment
 import com.protone.eChatGPT.utils.getString
 import com.protone.eChatGPT.utils.hideSoftInput
 import com.protone.eChatGPT.utils.launchMain

@@ -6,6 +6,7 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
+import com.aallam.openai.client.Chat
 import com.protone.eChatGPT.R
 import com.protone.eChatGPT.bean.ChatItem
 import com.protone.eChatGPT.databinding.ChatItemLayoutBinding
@@ -44,32 +45,16 @@ open class ChatListAdapter : Adapter<ViewBindingHolder<ChatItemLayoutBinding>>()
         if (payloads.isNotEmpty()) holder.binding.apply {
             content.isGone = false
             content.text = getChatItem(position).content
-            when (payloads.first()) {
-                ChatItem.ChatTag.Finish -> {
-                    state.isGone = true
-                }
-                ChatItem.ChatTag.Thinking -> {
-                    if (!state.isVisible) {
-                        state.isVisible = true
-                    }
-                }
-                ChatItem.ChatTag.MaxLength -> {
-                    state.isGone = true
-                }
-                ChatItem.ChatTag.NotSupport -> {
-                    state.isGone = true
-                }
-                ChatItem.ChatTag.NetworkError -> {
-                    state.isGone = true
-                    retry.isVisible = true
-                }
-            }
+            payloads.first().takeIf { it is ChatItem }?.let { setChatState(it as ChatItem) }
         } else super.onBindViewHolder(holder, position, payloads)
     }
 
     override fun onBindViewHolder(holder: ViewBindingHolder<ChatItemLayoutBinding>, position: Int) {
         val chatItem = getChatItem(position)
         holder.binding.apply {
+            details.isGone = true
+            retry.isVisible = false
+            state.isVisible = false
             when (chatItem.target) {
                 is ChatItem.ChatTarget.AI -> {
                     root.setBackgroundResource(R.color.ai_content)
@@ -77,6 +62,7 @@ open class ChatListAdapter : Adapter<ViewBindingHolder<ChatItemLayoutBinding>>()
                     content.typeface = Typeface.DEFAULT
                     aiAppearanceConfiguration(chatItem)
                 }
+
                 is ChatItem.ChatTarget.HUMAN -> {
                     root.setBackgroundResource(R.color.human_content)
                     root.elevation = 2f
@@ -102,19 +88,41 @@ open class ChatListAdapter : Adapter<ViewBindingHolder<ChatItemLayoutBinding>>()
     }
 
     internal open fun ChatItemLayoutBinding.aiAppearanceConfiguration(chatItem: ChatItem) {
-        details.isVisible = true
-        if (chatItem.chatTag == ChatItem.ChatTag.NetworkError) {
-            details.isGone = true
-            retry.isVisible = true
-        } else {
-            state.isVisible = true
-        }
+        setChatState(chatItem)
+        details.isGone = chatItem.chatTag == ChatItem.ChatTag.NetworkError
     }
 
     internal open fun ChatItemLayoutBinding.humanAppearanceConfiguration(chatItem: ChatItem) {
         state.isGone = true
         details.isGone = true
         retry.isGone = true
+    }
+
+    private fun ChatItemLayoutBinding.setChatState(chatItem: ChatItem) {
+        when (chatItem.chatTag) {
+            ChatItem.ChatTag.Finish -> {
+                state.isGone = true
+            }
+
+            ChatItem.ChatTag.Thinking -> {
+                if (!state.isVisible) {
+                    state.isVisible = true
+                }
+            }
+
+            ChatItem.ChatTag.MaxLength -> {
+                state.isGone = true
+            }
+
+            ChatItem.ChatTag.NotSupport -> {
+                state.isGone = true
+            }
+
+            ChatItem.ChatTag.NetworkError -> {
+                state.isGone = true
+                retry.isVisible = true
+            }
+        }
     }
 
     interface ItemEvent {

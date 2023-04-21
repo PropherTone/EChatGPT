@@ -12,7 +12,7 @@ import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.protone.eChatGPT.EApplication
 import com.protone.eChatGPT.R
-import com.protone.eChatGPT.mods.chat.ChatActivity
+import com.protone.eChatGPT.modes.chat.ChatActivity
 import com.protone.eChatGPT.utils.getString
 import com.protone.eChatGPT.utils.intent
 import com.protone.eChatGPT.utils.tryWithCatch

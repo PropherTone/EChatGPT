@@ -1,7 +1,6 @@
-package com.protone.eChatGPT.mods
+package com.protone.eChatGPT.modes
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

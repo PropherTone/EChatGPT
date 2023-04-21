@@ -42,4 +42,14 @@
     <string name="back_to_image">Back to image</string>
     <string name="empty_notify">Can\'t be empty</string>
     <string name="no_content">No content</string>
+    <string name="audio">audio</string>
+    <string name="details">details</string>
+    <string name="completions">completions</string>
+    <string name="edits">edits</string>
+    <string name="files">files</string>
+    <string name="fineTunes">fineTunes</string>
+    <string name="models">models</string>
+    <string name="moderations">moderations</string>
+    <string name="embeddings">embeddings</string>
+    <string name="configs">configs</string>
 </resources>

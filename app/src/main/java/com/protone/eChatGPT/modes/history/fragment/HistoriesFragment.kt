@@ -1,4 +1,4 @@
-package com.protone.eChatGPT.mods.history.fragment
+package com.protone.eChatGPT.modes.history.fragment
 
 import android.animation.Animator
 import android.animation.TimeInterpolator
@@ -24,8 +24,7 @@ import com.protone.eChatGPT.bean.ChatHistory
 import com.protone.eChatGPT.databinding.HistoriesFragmentBinding
 import com.protone.eChatGPT.databinding.HistoriesOptionsActiveSceneBinding
 import com.protone.eChatGPT.databinding.HistoriesOptionsNormalSceneBinding
-import com.protone.eChatGPT.mods.BaseActivityFragment
-import com.protone.eChatGPT.mods.BaseFragment
+import com.protone.eChatGPT.modes.BaseActivityFragment
 import com.protone.eChatGPT.utils.launchIO
 import com.protone.eChatGPT.utils.layoutInflater
 import com.protone.eChatGPT.viewModel.activityViewModel.HistoryModViewModel
