@@ -23,16 +23,16 @@ import com.protone.eChatGPT.utils.messenger.EventMessengerImp
 import com.protone.eChatGPT.utils.messenger.event.ChatViewEvent
 import com.protone.eChatGPT.modes.BaseActivityFragment
 import com.protone.eChatGPT.utils.*
-import com.protone.eChatGPT.viewModel.activityViewModel.ChatModViewModel
+import com.protone.eChatGPT.viewModel.activityViewModel.ChatModeViewModel
 import com.protone.eChatGPT.viewModel.fragViewModel.ChatViewModel
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
-class ChatFragment : BaseActivityFragment<ChatFragmentBinding, ChatViewModel, ChatModViewModel>(),
+class ChatFragment : BaseActivityFragment<ChatFragmentBinding, ChatViewModel, ChatModeViewModel>(),
     EventMessenger<ChatViewEvent> by EventMessengerImp() {
 
     override val viewModel: ChatViewModel by viewModels()
-    override val activityViewModel: ChatModViewModel by activityViewModels()
+    override val activityViewModel: ChatModeViewModel by activityViewModels()
 
     override fun createView(
         inflater: LayoutInflater,
@@ -95,7 +95,7 @@ class ChatFragment : BaseActivityFragment<ChatFragmentBinding, ChatViewModel, Ch
                         chatSave.elevation = 0f
                         if (activityViewModel.chatListAdapter.getData().isEmpty()) {
                             R.string.no_content.getString().toast()
-                        } else activityViewModel.send(ChatModViewModel.ChatModViewEvent.SaveConversation())
+                        } else activityViewModel.send(ChatModeViewModel.ChatModViewEvent.SaveConversation())
                         chatSave.elevation = R.dimen.option_elevation.getDimension()
                     }
                     ChatViewEvent.OnConversation -> reverseIsConversation()
@@ -171,7 +171,7 @@ class ChatFragment : BaseActivityFragment<ChatFragmentBinding, ChatViewModel, Ch
             send(ChatViewEvent.OnSystem)
         }
         openMenu.setOnClickListener {
-            activityViewModel.send(ChatModViewModel.ChatModViewEvent.BackToMenu)
+            activityViewModel.send(ChatModeViewModel.ChatModViewEvent.BackToMenu)
         }
         send.setOnClickListener {
             val msg = chatInputBox.text.toString()

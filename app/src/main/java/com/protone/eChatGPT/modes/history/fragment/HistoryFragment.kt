@@ -11,12 +11,12 @@ import com.protone.eChatGPT.adapter.ChatListEditAdapter
 import com.protone.eChatGPT.bean.ChatItem
 import com.protone.eChatGPT.databinding.HistoryFragmentBinding
 import com.protone.eChatGPT.modes.BaseActivityFragment
-import com.protone.eChatGPT.viewModel.activityViewModel.HistoryModViewModel
+import com.protone.eChatGPT.viewModel.activityViewModel.HistoryModeViewModel
 import com.protone.eChatGPT.viewModel.fragViewModel.HistoryViewModel
 import kotlinx.coroutines.launch
 
 class HistoryFragment :
-    BaseActivityFragment<HistoryFragmentBinding, HistoryViewModel, HistoryModViewModel>() {
+    BaseActivityFragment<HistoryFragmentBinding, HistoryViewModel, HistoryModeViewModel>() {
 
     companion object {
         const val CHAT_GROUP = "CHAT_GROUP"
@@ -24,7 +24,7 @@ class HistoryFragment :
 
     override val viewModel: HistoryViewModel by viewModels()
 
-    override val activityViewModel: HistoryModViewModel by activityViewModels()
+    override val activityViewModel: HistoryModeViewModel by activityViewModels()
 
     override fun createView(
         inflater: LayoutInflater,
@@ -34,11 +34,11 @@ class HistoryFragment :
         return HistoryFragmentBinding.inflate(inflater, container, false).apply {
             chatList.init()
             back.setOnClickListener {
-                activityViewModel.send(HistoryModViewModel.HistoryViewEvent.Back)
+                activityViewModel.send(HistoryModeViewModel.HistoryViewEvent.Back)
             }
             goChat.setOnClickListener {
                 activityViewModel.send(
-                    HistoryModViewModel.HistoryViewEvent.ContinueChat(
+                    HistoryModeViewModel.HistoryViewEvent.ContinueChat(
                         arguments?.getString(CHAT_GROUP) ?: return@setOnClickListener
                     )
                 )

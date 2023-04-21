@@ -10,10 +10,10 @@ import com.protone.eChatGPT.modes.chat.ChatActivity
 import com.protone.eChatGPT.modes.history.fragment.HistoryFragment
 import com.protone.eChatGPT.utils.intent
 import com.protone.eChatGPT.utils.launchMain
-import com.protone.eChatGPT.viewModel.activityViewModel.HistoryModViewModel
+import com.protone.eChatGPT.viewModel.activityViewModel.HistoryModeViewModel
 
-class HistoryActivity : BaseActivity<HistoryActivityBinding, HistoryModViewModel>() {
-    override val viewModel: HistoryModViewModel by viewModels()
+class HistoryActivity : BaseActivity<HistoryActivityBinding, HistoryModeViewModel>() {
+    override val viewModel: HistoryModeViewModel by viewModels()
 
     private val navController by lazy { findNavController(R.id.history_nav_host) }
 
@@ -21,13 +21,13 @@ class HistoryActivity : BaseActivity<HistoryActivityBinding, HistoryModViewModel
         return HistoryActivityBinding.inflate(layoutInflater)
     }
 
-    override fun HistoryModViewModel.init(savedInstanceState: Bundle?) {
+    override fun HistoryModeViewModel.init(savedInstanceState: Bundle?) {
         launchMain {
             eventFlow.collect {
                 when (it) {
-                    HistoryModViewModel.HistoryViewEvent.Back -> navController.popBackStack()
-                    HistoryModViewModel.HistoryViewEvent.Finish -> finish()
-                    is HistoryModViewModel.HistoryViewEvent.ShowChatHistory -> {
+                    HistoryModeViewModel.HistoryViewEvent.Back -> navController.popBackStack()
+                    HistoryModeViewModel.HistoryViewEvent.Finish -> finish()
+                    is HistoryModeViewModel.HistoryViewEvent.ShowChatHistory -> {
                         navController.navigate(
                             R.id.action_historiesFragment_to_historyFragment,
                             Bundle().apply {
@@ -35,7 +35,7 @@ class HistoryActivity : BaseActivity<HistoryActivityBinding, HistoryModViewModel
                             }
                         )
                     }
-                    is HistoryModViewModel.HistoryViewEvent.ContinueChat -> {
+                    is HistoryModeViewModel.HistoryViewEvent.ContinueChat -> {
                         navController.popBackStack()
                         startActivity(
                             ChatActivity::class.intent

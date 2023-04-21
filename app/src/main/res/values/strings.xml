@@ -21,6 +21,7 @@
     <string name="delete">Delete</string>
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
+    <string name="close">Close</string>
     <string name="retry">Retry</string>
     <string name="etc">…</string>
     <string name="total_token_count">Total tokens : %s</string>
@@ -52,4 +53,8 @@
     <string name="moderations">moderations</string>
     <string name="embeddings">embeddings</string>
     <string name="configs">configs</string>
+    <string name="authorize_key_title">Authorize key</string>
+    <string name="copy">copy</string>
+    <string name="notification_config_title">Notification shortcut entry</string>
+    <string name="add_shortcut">add shortcut</string>
 </resources>

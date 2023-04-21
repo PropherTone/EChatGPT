@@ -27,14 +27,14 @@ import com.protone.eChatGPT.databinding.HistoriesOptionsNormalSceneBinding
 import com.protone.eChatGPT.modes.BaseActivityFragment
 import com.protone.eChatGPT.utils.launchIO
 import com.protone.eChatGPT.utils.layoutInflater
-import com.protone.eChatGPT.viewModel.activityViewModel.HistoryModViewModel
+import com.protone.eChatGPT.viewModel.activityViewModel.HistoryModeViewModel
 import com.protone.eChatGPT.viewModel.fragViewModel.HistoriesViewModel
 import kotlinx.coroutines.launch
 
 class HistoriesFragment :
-    BaseActivityFragment<HistoriesFragmentBinding, HistoriesViewModel, HistoryModViewModel>() {
+    BaseActivityFragment<HistoriesFragmentBinding, HistoriesViewModel, HistoryModeViewModel>() {
     override val viewModel: HistoriesViewModel by viewModels()
-    override val activityViewModel: HistoryModViewModel by activityViewModels()
+    override val activityViewModel: HistoryModeViewModel by activityViewModels()
 
     companion object {
         const val SWAP_DURATION = 300L
@@ -51,7 +51,7 @@ class HistoriesFragment :
             options.init(
                 normal = {
                     it.root.setOnClickListener {
-                        activityViewModel.send(HistoryModViewModel.HistoryViewEvent.Finish)
+                        activityViewModel.send(HistoryModeViewModel.HistoryViewEvent.Finish)
                     }
                 },
                 active = {
@@ -79,7 +79,7 @@ class HistoriesFragment :
                 }
 
                 override fun itemClicked(item: ChatHistory) {
-                    activityViewModel.send(HistoryModViewModel.HistoryViewEvent.ShowChatHistory(item.group))
+                    activityViewModel.send(HistoryModeViewModel.HistoryViewEvent.ShowChatHistory(item.group))
                 }
 
             })

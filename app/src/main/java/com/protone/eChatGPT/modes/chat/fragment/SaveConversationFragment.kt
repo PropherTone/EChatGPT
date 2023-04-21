@@ -22,11 +22,11 @@ import com.protone.eChatGPT.utils.getString
 import com.protone.eChatGPT.utils.hideSoftInput
 import com.protone.eChatGPT.utils.launchMain
 import com.protone.eChatGPT.utils.toast
-import com.protone.eChatGPT.viewModel.activityViewModel.ChatModViewModel
+import com.protone.eChatGPT.viewModel.activityViewModel.ChatModeViewModel
 import com.protone.eChatGPT.viewModel.fragViewModel.SaveChatViewModel
 
 class SaveConversationFragment :
-    BaseActivityFragment<SaveConversationFragmentBinding, SaveChatViewModel, ChatModViewModel>(),
+    BaseActivityFragment<SaveConversationFragmentBinding, SaveChatViewModel, ChatModeViewModel>(),
     EventMessenger<SaveConversationEvent> by EventMessengerImp() {
 
     companion object {
@@ -34,7 +34,7 @@ class SaveConversationFragment :
     }
 
     override val viewModel: SaveChatViewModel by viewModels()
-    override val activityViewModel: ChatModViewModel by activityViewModels()
+    override val activityViewModel: ChatModeViewModel by activityViewModels()
 
     override fun createView(
         inflater: LayoutInflater,
@@ -56,7 +56,7 @@ class SaveConversationFragment :
             when (it) {
                 SaveChatViewModel.SAVE_SUCCESS -> {
                     binding.name.hideSoftInput()
-                    activityViewModel.send(ChatModViewModel.ChatModViewEvent.Back)
+                    activityViewModel.send(ChatModeViewModel.ChatModViewEvent.Back)
                 }
                 SaveChatViewModel.SAVING -> binding.saveProgress.isVisible = true
                 SaveChatViewModel.SAVE_FAILED -> {
@@ -81,7 +81,7 @@ class SaveConversationFragment :
                 when (it) {
                     SaveConversationEvent.Finish -> {
                         binding.name.hideSoftInput()
-                        activityViewModel.send(ChatModViewModel.ChatModViewEvent.Back)
+                        activityViewModel.send(ChatModeViewModel.ChatModViewEvent.Back)
                     }
                     SaveConversationEvent.Save -> {
                         saveConversation(

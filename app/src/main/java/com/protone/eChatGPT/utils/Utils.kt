@@ -1,5 +1,8 @@
 package com.protone.eChatGPT.utils
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -10,6 +13,11 @@ import kotlinx.coroutines.*
 
 fun String.toast() {
     Toast.makeText(EApplication.app, this, Toast.LENGTH_SHORT).show()
+}
+
+fun String.saveContentToClipBoard() {
+    (EApplication.app.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?)
+        ?.setPrimaryClip(ClipData.newPlainText("chat", this))
 }
 
 suspend inline fun <T> onResult(

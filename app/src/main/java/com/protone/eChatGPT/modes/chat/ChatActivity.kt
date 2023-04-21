@@ -10,6 +10,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.protone.eChatGPT.R
 import com.protone.eChatGPT.databinding.ChatActivityBinding
 import com.protone.eChatGPT.databinding.ContinueChatGuideBinding
+import com.protone.eChatGPT.databinding.EnterTokenGuideLayoutBinding
 import com.protone.eChatGPT.databinding.NewChatGuideDialogBinding
 import com.protone.eChatGPT.modes.BaseActivity
 import com.protone.eChatGPT.modes.chat.fragment.SaveConversationFragment
@@ -21,13 +22,13 @@ import com.protone.eChatGPT.utils.messenger.EventMessenger
 import com.protone.eChatGPT.utils.messenger.EventMessengerImp
 import com.protone.eChatGPT.utils.messenger.event.ChatViewEvent
 import com.protone.eChatGPT.utils.requestBackgroundAlive
-import com.protone.eChatGPT.utils.showGetTokenPop
-import com.protone.eChatGPT.viewModel.activityViewModel.ChatModViewModel
+import com.protone.eChatGPT.utils.showPopupWindow
+import com.protone.eChatGPT.viewModel.activityViewModel.ChatModeViewModel
 import com.protone.eChatGPT.viewModel.fragViewModel.HistoryViewModel
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
-class ChatActivity : BaseActivity<ChatActivityBinding, ChatModViewModel>(),
+class ChatActivity : BaseActivity<ChatActivityBinding, ChatModeViewModel>(),
     EventMessenger<ChatViewEvent> by EventMessengerImp() {
 
     companion object {
@@ -35,7 +36,7 @@ class ChatActivity : BaseActivity<ChatActivityBinding, ChatModViewModel>(),
         const val GROUP = "Group"
     }
 
-    override val viewModel: ChatModViewModel by viewModels()
+    override val viewModel: ChatModeViewModel by viewModels()
 
     private val navController by lazy { findNavController(R.id.chat_nav_host) }
 
@@ -44,22 +45,28 @@ class ChatActivity : BaseActivity<ChatActivityBinding, ChatModViewModel>(),
         return ChatActivityBinding.inflate(layoutInflater).apply {
             root.post {
                 var token = ""
-                if (userConfig.token.isEmpty()) showGetTokenPop(root) {
-                    token = it.toString()
-                    userConfig.token = token
-                    startService(ChatService::class.intent)
-                }.apply { setOnDismissListener { token.ifEmpty { finish() } } }
+                if (userConfig.token.isEmpty()) showPopupWindow(root) { pop ->
+                    EnterTokenGuideLayoutBinding.inflate(layoutInflater).apply {
+                        confirmBtn.setOnClickListener {
+                            token = tokenInputBox.text.toString()
+                            userConfig.token = token
+                            startService(ChatService::class.intent)
+                            pop.dismiss()
+                        }
+                        pop.setOnDismissListener { token.ifEmpty { finish() } }
+                    }.root
+                }
                 else startService(ChatService::class.intent)
             }
         }
     }
 
-    override fun ChatModViewModel.init(savedInstanceState: Bundle?) {
+    override fun ChatModeViewModel.init(savedInstanceState: Bundle?) {
         launch {
             eventFlow.collect { event ->
                 if (lifecycle.currentState < Lifecycle.State.STARTED) return@collect
                 when (event) {
-                    is ChatModViewModel.ChatModViewEvent.SaveConversation -> {
+                    is ChatModeViewModel.ChatModViewEvent.SaveConversation -> {
                         navController.navigate(
                             R.id.action_chatFragment_to_saveConversationActivity,
                             Bundle().apply {
@@ -69,8 +76,9 @@ class ChatActivity : BaseActivity<ChatActivityBinding, ChatModViewModel>(),
                                 )
                             })
                     }
-                    ChatModViewModel.ChatModViewEvent.Back -> navController.popBackStack()
-                    ChatModViewModel.ChatModViewEvent.BackToMenu -> {
+
+                    ChatModeViewModel.ChatModViewEvent.Back -> navController.popBackStack()
+                    ChatModeViewModel.ChatModViewEvent.BackToMenu -> {
                         navController
                         startActivity(MenuActivity::class.intent.also {
                             it.flags =
@@ -78,8 +86,8 @@ class ChatActivity : BaseActivity<ChatActivityBinding, ChatModViewModel>(),
                         })
                         overridePendingTransition(R.anim.card_top_in, R.anim.card_top_out)
                     }
-                    ChatModViewModel.ChatModViewEvent.NewChat -> {
 
+                    ChatModeViewModel.ChatModViewEvent.NewChat -> {
                         navController.popBackStack()
                         navController.navigate(R.id.chatFragment)
                     }
@@ -102,7 +110,7 @@ class ChatActivity : BaseActivity<ChatActivityBinding, ChatModViewModel>(),
                             }
                         )
                     } ?: viewModel.chatListAdapter.clear()
-                    viewModel.send(ChatModViewModel.ChatModViewEvent.NewChat)
+                    viewModel.send(ChatModeViewModel.ChatModViewEvent.NewChat)
                 }
                 if (viewModel.chatListAdapter.getData().isEmpty()) {
                     continueChat()
@@ -110,7 +118,7 @@ class ChatActivity : BaseActivity<ChatActivityBinding, ChatModViewModel>(),
                 }
                 startNewChat(
                     goSave = {
-                        viewModel.send(ChatModViewModel.ChatModViewEvent.SaveConversation(true))
+                        viewModel.send(ChatModeViewModel.ChatModViewEvent.SaveConversation(true))
                     },
                     noNeed = { continueChat() }
                 )

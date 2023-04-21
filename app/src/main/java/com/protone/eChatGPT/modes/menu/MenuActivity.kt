@@ -3,26 +3,32 @@ package com.protone.eChatGPT.modes.menu
 import android.app.ActivityManager
 import android.graphics.Rect
 import android.os.Bundle
+import android.text.method.HideReturnsTransformationMethod
+import android.text.method.PasswordTransformationMethod
 import android.view.View
 import androidx.activity.viewModels
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import com.protone.eChatGPT.R
 import com.protone.eChatGPT.adapter.ModeListAdapter
 import com.protone.eChatGPT.bean.Mode
 import com.protone.eChatGPT.bean.SwapAni
+import com.protone.eChatGPT.databinding.ConfigurationLayoutBinding
 import com.protone.eChatGPT.databinding.MenuActivityBinding
 import com.protone.eChatGPT.modes.BaseActivity
 import com.protone.eChatGPT.modes.activities
 import com.protone.eChatGPT.modes.chat.ChatActivity
 import com.protone.eChatGPT.modes.history.HistoryActivity
 import com.protone.eChatGPT.modes.image.ImageActivity
+import com.protone.eChatGPT.repository.userConfig
+import com.protone.eChatGPT.utils.getStatusBarHeight
 import com.protone.eChatGPT.utils.getString
 import com.protone.eChatGPT.utils.intent
+import com.protone.eChatGPT.utils.saveContentToClipBoard
+import com.protone.eChatGPT.utils.showPopupWindow
 import com.protone.eChatGPT.viewModel.activityViewModel.MenuViewModel
 
 class MenuActivity : BaseActivity<MenuActivityBinding, MenuViewModel>() {
@@ -67,8 +73,7 @@ class MenuActivity : BaseActivity<MenuActivityBinding, MenuViewModel>() {
     }
 
     private fun RecyclerView.init() {
-        val itemCount = 3
-        layoutManager = GridLayoutManager(this@MenuActivity, itemCount)
+        layoutManager = GridLayoutManager(this@MenuActivity, 3)
         addItemDecoration(object : ItemDecoration() {
 
             private val margin =
@@ -81,10 +86,6 @@ class MenuActivity : BaseActivity<MenuActivityBinding, MenuViewModel>() {
                 state: RecyclerView.State
             ) {
                 super.getItemOffsets(outRect, view, parent, state)
-                val position = parent.getChildLayoutPosition(view)
-                if (position % itemCount == 0) {
-                    outRect.left = margin
-                }
                 outRect.right = margin
                 outRect.top = margin
             }
@@ -127,7 +128,31 @@ class MenuActivity : BaseActivity<MenuActivityBinding, MenuViewModel>() {
                         )
 
                         history -> startActivity(HistoryActivity::class.intent)
-                        configs -> {}
+                        configs -> showPopupWindow(binding.root) { pop ->
+                            ConfigurationLayoutBinding.inflate(layoutInflater).apply {
+                                root.setPadding(0, getStatusBarHeight()?.top ?: 0, 0, 0)
+                                keyEdit.isEnabled = false
+                                keyEdit.setText(userConfig.token)
+                                copy.setOnClickListener {
+                                    keyEdit.text.toString().saveContentToClipBoard()
+                                }
+                                keyVisible.setOnCheckedChangedListener { _, isCheck ->
+                                    if (edit.isChecked) return@setOnCheckedChangedListener
+                                    keyEdit.transformationMethod =
+                                        if (isCheck) HideReturnsTransformationMethod.getInstance()
+                                        else PasswordTransformationMethod.getInstance()
+                                }
+                                edit.setOnCheckedChangedListener { _, isCheck ->
+                                    keyEdit.isEnabled = isCheck
+                                    keyVisible.isChecked = isCheck
+                                    if (!isCheck) userConfig.token = keyEdit.text.toString()
+                                }
+                                close.setOnClickListener {
+                                    pop.dismiss()
+                                }
+                            }.root
+                        }
+
                         image -> {}
                         audio -> {}
                         completions -> {}

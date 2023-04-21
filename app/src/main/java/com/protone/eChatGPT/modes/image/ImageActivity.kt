@@ -4,17 +4,17 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import com.protone.eChatGPT.databinding.ImageActivityBinding
 import com.protone.eChatGPT.modes.BaseActivity
-import com.protone.eChatGPT.viewModel.activityViewModel.ImageModViewModel
+import com.protone.eChatGPT.viewModel.activityViewModel.ImageModeViewModel
 
-class ImageActivity : BaseActivity<ImageActivityBinding, ImageModViewModel>() {
+class ImageActivity : BaseActivity<ImageActivityBinding, ImageModeViewModel>() {
 
-    override val viewModel: ImageModViewModel by viewModels()
+    override val viewModel: ImageModeViewModel by viewModels()
 
     override fun createView(savedInstanceState: Bundle?): ImageActivityBinding {
         return ImageActivityBinding.inflate(layoutInflater)
     }
 
-    override fun ImageModViewModel.init(savedInstanceState: Bundle?) {
+    override fun ImageModeViewModel.init(savedInstanceState: Bundle?) {
     }
 
 }

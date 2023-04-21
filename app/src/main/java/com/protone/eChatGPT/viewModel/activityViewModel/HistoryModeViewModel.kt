@@ -2,12 +2,11 @@ package com.protone.eChatGPT.viewModel.activityViewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.protone.eChatGPT.bean.ChatHistory
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 
-class HistoryModViewModel : ViewModel() {
+class HistoryModeViewModel : ViewModel() {
 
     sealed class HistoryViewEvent {
         object Back : HistoryViewEvent()

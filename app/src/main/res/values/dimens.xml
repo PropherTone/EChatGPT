@@ -18,6 +18,7 @@
     <dimen name="content_text_size">18sp</dimen>
     <dimen name="item_content_text_size">18sp</dimen>
     <dimen name="item_sub_content_text_size">14sp</dimen>
+    <dimen name="configuration_text_size">16sp</dimen>
     <dimen name="option_item_height">52dp</dimen>
     <dimen name="menu_margin">24dp</dimen>
 

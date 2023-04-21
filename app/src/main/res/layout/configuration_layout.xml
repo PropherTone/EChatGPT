@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/content_white"
+        android:orientation="vertical">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/key_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/content_white"
+                    android:gravity="center_vertical"
+                    android:padding="@dimen/content_padding"
+                    android:text="@string/authorize_key_title"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/configuration_text_size"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.constraintlayout.helper.widget.Layer
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="@color/main_color"
+                    app:constraint_referenced_ids="key_edit,copy,edit,add_shortcut"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/key_title" />
+
+                <EditText
+                    android:id="@+id/key_edit"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:gravity="center_vertical"
+                    android:importantForAutofill="no"
+                    android:inputType="textPassword"
+                    android:padding="@dimen/content_padding"
+                    app:layout_constraintEnd_toStartOf="@id/key_visible"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/key_title"
+                    tools:ignore="LabelFor" />
+
+                <com.protone.eChatGPT.view.CheckedImageView
+                    android:id="@+id/key_visible"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="@color/white"
+                    android:contentDescription="@string/copy"
+                    android:padding="@dimen/content_padding"
+                    android:src="@drawable/visible_selector"
+                    app:layout_constraintBottom_toBottomOf="@id/key_edit"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintEnd_toStartOf="@id/copy"
+                    app:layout_constraintTop_toTopOf="@id/key_edit" />
+
+                <ImageButton
+                    android:id="@+id/copy"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="?android:selectableItemBackground"
+                    android:contentDescription="@string/copy"
+                    android:src="@drawable/content_copy"
+                    app:layout_constraintBottom_toBottomOf="@id/key_edit"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintEnd_toStartOf="@id/edit"
+                    app:layout_constraintTop_toTopOf="@id/key_edit" />
+
+                <com.protone.eChatGPT.view.CheckedImageView
+                    android:id="@+id/edit"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="?android:selectableItemBackground"
+                    android:contentDescription="@string/edits"
+                    android:padding="@dimen/content_padding"
+                    android:src="@drawable/edit_check_box"
+                    app:layout_constraintBottom_toBottomOf="@id/copy"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/copy" />
+
+                <TextView
+                    android:id="@+id/notification_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/content_white"
+                    android:gravity="center_vertical"
+                    android:padding="@dimen/content_padding"
+                    android:text="@string/notification_config_title"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/configuration_text_size"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/key_edit" />
+
+                <LinearLayout
+                    android:id="@+id/shortcut_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintTop_toBottomOf="@id/notification_title" />
+
+                <ImageButton
+                    android:id="@+id/add_shortcut"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?android:selectableItemBackground"
+                    android:contentDescription="@string/add_shortcut"
+                    android:padding="@dimen/option_content_padding"
+                    android:src="@drawable/add"
+                    app:layout_constraintTop_toBottomOf="@id/shortcut_container" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
+
+        <ImageView
+            android:id="@+id/close"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/main_color"
+            android:contentDescription="@string/close"
+            android:padding="@dimen/option_content_padding"
+            android:src="@drawable/close"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+    </LinearLayout>
+
+</layout>

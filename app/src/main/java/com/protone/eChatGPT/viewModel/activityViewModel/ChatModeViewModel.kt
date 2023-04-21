@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 
-class ChatModViewModel : ViewModel() {
+class ChatModeViewModel : ViewModel() {
 
     sealed class ChatModViewEvent {
         data class SaveConversation(val startNewAfterSaved: Boolean= false) : ChatModViewEvent()

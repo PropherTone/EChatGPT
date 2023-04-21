@@ -2,11 +2,14 @@ package com.protone.eChatGPT.utils
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Rect
 import android.net.Uri
+import android.net.wifi.WifiEnterpriseConfig.Eap
 import android.os.Build
 import android.os.PowerManager
 import android.provider.Settings
@@ -16,6 +19,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import com.protone.eChatGPT.EApplication
@@ -33,6 +37,9 @@ val Context.isKeyboardActive
 fun Activity.hideKeyboard() {
     WindowCompat.getInsetsController(window, window.decorView).hide(WindowInsetsCompat.Type.ime())
 }
+
+fun Activity.getStatusBarHeight() = ViewCompat.getRootWindowInsets(window.decorView)
+    ?.getInsets(WindowInsetsCompat.Type.statusBars())
 
 @SuppressLint("BatteryLife")
 fun Context.requestBackgroundAlive() {
