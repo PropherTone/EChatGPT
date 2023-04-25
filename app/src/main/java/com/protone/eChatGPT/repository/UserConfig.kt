@@ -19,7 +19,7 @@ class UserConfig(context: Context) {
 
     private val shortcut by config.string(
         "Notification_ShortCuts",
-        "${Shortcut.Chat}|${Shortcut.Config}"
+        "${Shortcut.Chat}"
     )
     val notificationShortcuts
         get() = shortcut.split("|").map { Shortcut(it) }

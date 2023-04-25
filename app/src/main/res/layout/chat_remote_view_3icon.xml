@@ -14,8 +14,7 @@
         android:background="?android:selectableItemBackground"
         android:contentDescription="@string/notification_shortcut"
         android:foregroundGravity="center"
-        android:padding="@dimen/content_padding"
-        android:src="@drawable/send_msg" />
+        android:padding="@dimen/content_padding" />
 
     <ImageView
         android:id="@+id/icon2"
@@ -26,8 +25,7 @@
         android:background="?android:selectableItemBackground"
         android:contentDescription="@string/notification_shortcut"
         android:foregroundGravity="center"
-        android:padding="@dimen/content_padding"
-        android:src="@drawable/send_msg" />
+        android:padding="@dimen/content_padding" />
 
     <ImageView
         android:id="@+id/icon3"
@@ -38,19 +36,6 @@
         android:background="?android:selectableItemBackground"
         android:contentDescription="@string/notification_shortcut"
         android:foregroundGravity="center"
-        android:padding="@dimen/content_padding"
-        android:src="@drawable/send_msg" />
-
-    <ImageView
-        android:id="@+id/icon4"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_gravity="center"
-        android:layout_weight="1"
-        android:background="?android:selectableItemBackground"
-        android:contentDescription="@string/notification_shortcut"
-        android:foregroundGravity="center"
-        android:padding="@dimen/content_padding"
-        android:src="@drawable/send_msg" />
+        android:padding="@dimen/content_padding" />
 
 </LinearLayout>
