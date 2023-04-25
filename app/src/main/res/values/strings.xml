@@ -57,4 +57,9 @@
     <string name="copy">copy</string>
     <string name="notification_config_title">Notification shortcut entry</string>
     <string name="add_shortcut">add shortcut</string>
+    <string name="edit">EDIT</string>
+    <string name="remove_shortcut">REMOVE</string>
+    <string name="switch_shortcut">CHANGE</string>
+    <string name="settings_title">Settings</string>
+    <string name="notification_shortcut">Notification shortcut</string>
 </resources>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    android:background="@color/main_color"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/icon1"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:background="?android:selectableItemBackground"
+        android:contentDescription="@string/notification_shortcut"
+        android:foregroundGravity="center"
+        android:padding="@dimen/content_padding"
+        android:src="@drawable/send_msg" />
+
+    <ImageView
+        android:id="@+id/icon2"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:background="?android:selectableItemBackground"
+        android:contentDescription="@string/notification_shortcut"
+        android:foregroundGravity="center"
+        android:padding="@dimen/content_padding"
+        android:src="@drawable/send_msg" />
+
+    <ImageView
+        android:id="@+id/icon3"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:background="?android:selectableItemBackground"
+        android:contentDescription="@string/notification_shortcut"
+        android:foregroundGravity="center"
+        android:padding="@dimen/content_padding"
+        android:src="@drawable/send_msg" />
+
+    <ImageView
+        android:id="@+id/icon4"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:background="?android:selectableItemBackground"
+        android:contentDescription="@string/notification_shortcut"
+        android:foregroundGravity="center"
+        android:padding="@dimen/content_padding"
+        android:src="@drawable/send_msg" />
+
+</LinearLayout>

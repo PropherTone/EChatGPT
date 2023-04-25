@@ -1,6 +1,5 @@
 package com.protone.eChatGPT.modes
 
-import android.app.Activity
 import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
@@ -19,12 +18,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
-import java.util.concurrent.LinkedBlockingDeque
 import java.util.concurrent.atomic.AtomicInteger
 
 const val TAG = "EChatGPT_TAG"
-
-val activities = LinkedBlockingDeque<Class<out Activity>>()
 
 abstract class BaseActivity<VB : ViewDataBinding, VM : ViewModel> : AppCompatActivity(),
     CoroutineScope by MainScope() {
@@ -41,7 +37,6 @@ abstract class BaseActivity<VB : ViewDataBinding, VM : ViewModel> : AppCompatAct
     override fun onCreate(savedInstanceState: Bundle?) {
         setTransparentClipStatusBar(AppCompatDelegate.getDefaultNightMode() == MODE_NIGHT_YES)
         super.onCreate(savedInstanceState)
-        activities.add(this::class.java)
         binding = createView(savedInstanceState).apply {
             setContentView(root)
             root.post { viewModel.init(savedInstanceState) }
@@ -103,7 +98,6 @@ abstract class BaseActivity<VB : ViewDataBinding, VM : ViewModel> : AppCompatAct
     override fun onDestroy() {
         try {
             cancel()
-            activities.remove(this::class.java)
         } finally {
             super.onDestroy()
         }
