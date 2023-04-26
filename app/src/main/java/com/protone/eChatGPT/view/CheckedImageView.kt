@@ -12,6 +12,7 @@ class CheckedImageView @JvmOverloads constructor(
     var isChecked = false
         set(value) {
             field = value
+            onCheckedChangeListener?.onCheckedChanged(null,isChecked)
             refreshDrawableState()
         }
 
@@ -33,7 +34,6 @@ class CheckedImageView @JvmOverloads constructor(
     init {
         setOnClickListener {
             isChecked = !isChecked
-            onCheckedChangeListener?.onCheckedChanged(null,isChecked)
         }
     }
 }

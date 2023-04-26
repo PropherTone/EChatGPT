@@ -13,7 +13,7 @@ import com.protone.eChatGPT.databinding.ContinueChatGuideBinding
 import com.protone.eChatGPT.databinding.EnterTokenGuideLayoutBinding
 import com.protone.eChatGPT.databinding.NewChatGuideDialogBinding
 import com.protone.eChatGPT.modes.BaseActivity
-import com.protone.eChatGPT.modes.chat.fragment.SaveConversationFragment
+import com.protone.eChatGPT.modes.SaveHistoryFragment.Companion.FINISH_OPTION
 import com.protone.eChatGPT.modes.menu.MenuActivity
 import com.protone.eChatGPT.repository.userConfig
 import com.protone.eChatGPT.service.ChatService
@@ -71,7 +71,7 @@ class ChatActivity : BaseActivity<ChatActivityBinding, ChatModeViewModel>(),
                             R.id.action_chatFragment_to_saveConversationActivity,
                             Bundle().apply {
                                 putBoolean(
-                                    SaveConversationFragment.FINISH_OPTION,
+                                    FINISH_OPTION,
                                     event.startNewAfterSaved
                                 )
                             })

@@ -11,6 +11,7 @@ class HistoryModeViewModel : ViewModel() {
     sealed class HistoryViewEvent {
         object Back : HistoryViewEvent()
         object Finish : HistoryViewEvent()
+        data class BackAndDelete(val data : String) : HistoryViewEvent()
         data class ShowChatHistory(val group: String) : HistoryViewEvent()
         data class ContinueChat(val group: String) : HistoryViewEvent()
     }

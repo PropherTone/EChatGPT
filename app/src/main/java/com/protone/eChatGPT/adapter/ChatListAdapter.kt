@@ -146,6 +146,7 @@ interface ChatHelper {
 
         override fun ChatListAdapter.attach() {
             this@ChatHelperImp.adapter = this
+            if (chatList.isNotEmpty()) notifyItemRangeInserted(0, chatList.size)
         }
 
         override fun getData(): Collection<ChatItem> = chatList
@@ -157,9 +158,9 @@ interface ChatHelper {
         override fun getListSize() = chatList.size
 
         override fun setList(list: Collection<ChatItem>) {
+            val size = chatList.size
+            chatList.addAll(list)
             adapter?.run {
-                val size = chatList.size
-                chatList.addAll(list)
                 notifyItemRangeInserted(size, chatList.size)
             }
         }

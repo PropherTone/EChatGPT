@@ -15,6 +15,10 @@ import com.protone.eChatGPT.viewModel.activityViewModel.HistoryModeViewModel
 class HistoryActivity : BaseActivity<HistoryActivityBinding, HistoryModeViewModel>() {
     override val viewModel: HistoryModeViewModel by viewModels()
 
+    companion object{
+        const val FRAG_KEY = "Data_Key"
+    }
+
     private val navController by lazy { findNavController(R.id.history_nav_host) }
 
     override fun createView(savedInstanceState: Bundle?): HistoryActivityBinding {
@@ -25,7 +29,10 @@ class HistoryActivity : BaseActivity<HistoryActivityBinding, HistoryModeViewMode
         launchMain {
             eventFlow.collect {
                 when (it) {
-                    HistoryModeViewModel.HistoryViewEvent.Back -> navController.popBackStack()
+                    HistoryModeViewModel.HistoryViewEvent.Back -> {
+                        navController.currentBackStackEntry?.savedStateHandle?.set(FRAG_KEY,)
+                        navController.popBackStack()
+                    }
                     HistoryModeViewModel.HistoryViewEvent.Finish -> finish()
                     is HistoryModeViewModel.HistoryViewEvent.ShowChatHistory -> {
                         navController.navigate(

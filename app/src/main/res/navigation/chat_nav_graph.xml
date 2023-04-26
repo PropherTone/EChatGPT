@@ -19,6 +19,6 @@
     </fragment>
     <fragment
         android:id="@+id/saveConversationActivity"
-        android:name="com.protone.eChatGPT.modes.chat.fragment.SaveConversationFragment"
+        android:name="com.protone.eChatGPT.modes.chat.fragment.SaveChatFragment"
         android:label="SaveConversationActivity" />
 </navigation>

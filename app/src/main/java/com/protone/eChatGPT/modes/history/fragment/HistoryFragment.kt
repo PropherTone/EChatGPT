@@ -56,16 +56,18 @@ class HistoryFragment :
 
     private fun RecyclerView.init() {
         layoutManager = LinearLayoutManager(requireContext())
-        adapter = viewModel.chatListEditAdapter
-        viewModel.chatListEditAdapter.setEditItemEvent(object : ChatListEditAdapter.EditItemEvent {
-            override fun delete(position: Int, chatItem: ChatItem) {
-                viewModel.deleteChat(position, chatItem) {
-                    launch {
-                        it.forEach { item -> viewModel.chatListEditAdapter.remove(item) }
+        adapter = viewModel.chatListEditAdapter.apply {
+            setEditItemEvent(object : ChatListEditAdapter.EditItemEvent {
+                override fun delete(position: Int, chatItem: ChatItem) {
+                    viewModel.deleteChatHistory(position, chatItem) {
+                        launch {
+                            it.forEach { item -> remove(item) }
+                            if (getData().isEmpty()) activityViewModel.send(HistoryModeViewModel.HistoryViewEvent.Back)
+                        }
                     }
                 }
-            }
-        })
+            })
+        }
     }
 
 }

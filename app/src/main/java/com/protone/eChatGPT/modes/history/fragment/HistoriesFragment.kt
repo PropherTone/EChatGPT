@@ -13,6 +13,7 @@ import androidx.core.view.size
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,6 +26,7 @@ import com.protone.eChatGPT.databinding.HistoriesFragmentBinding
 import com.protone.eChatGPT.databinding.HistoriesOptionsActiveSceneBinding
 import com.protone.eChatGPT.databinding.HistoriesOptionsNormalSceneBinding
 import com.protone.eChatGPT.modes.BaseActivityFragment
+import com.protone.eChatGPT.modes.history.HistoryActivity
 import com.protone.eChatGPT.utils.launchIO
 import com.protone.eChatGPT.utils.layoutInflater
 import com.protone.eChatGPT.viewModel.activityViewModel.HistoryModeViewModel
@@ -68,6 +70,12 @@ class HistoriesFragment :
     }
 
     override fun HistoriesViewModel.init(savedInstanceState: Bundle?) {
+        findNavController().currentBackStackEntry
+            ?.savedStateHandle
+            ?.getLiveData<String>(HistoryActivity.FRAG_KEY)
+            ?.observe(this@HistoriesFragment) {
+
+            }
         if (savedInstanceState != null) chatHistoriesAdapter.refresh() else {
             chatHistoriesAdapter.setOnItemEvent(object : ChatHistoriesAdapter.ItemEvent {
                 override fun enterSelectMode() {
@@ -79,7 +87,11 @@ class HistoriesFragment :
                 }
 
                 override fun itemClicked(item: ChatHistory) {
-                    activityViewModel.send(HistoryModeViewModel.HistoryViewEvent.ShowChatHistory(item.group))
+                    activityViewModel.send(
+                        HistoryModeViewModel.HistoryViewEvent.ShowChatHistory(
+                            item.group
+                        )
+                    )
                 }
 
             })
@@ -152,6 +164,7 @@ class HistoriesFragment :
                         is HistoriesOptionsNormalSceneBinding -> {
                             normal(this)
                         }
+
                         is HistoriesOptionsActiveSceneBinding -> {
                             active(this)
                         }

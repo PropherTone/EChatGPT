@@ -43,7 +43,6 @@ fun Activity.showConfigurationPopupWindow(decorView: View, userConfig: UserConfi
                 keyEdit.text.toString().saveContentToClipBoard()
             }
             keyVisible.setOnCheckedChangedListener { _, isCheck ->
-                if (edit.isChecked) return@setOnCheckedChangedListener
                 keyEdit.transformationMethod =
                     if (isCheck) HideReturnsTransformationMethod.getInstance()
                     else PasswordTransformationMethod.getInstance()
