@@ -30,10 +30,13 @@ class HistoryActivity : BaseActivity<HistoryActivityBinding, HistoryModeViewMode
             eventFlow.collect {
                 when (it) {
                     HistoryModeViewModel.HistoryViewEvent.Back -> {
-                        navController.currentBackStackEntry?.savedStateHandle?.set(FRAG_KEY,)
                         navController.popBackStack()
                     }
                     HistoryModeViewModel.HistoryViewEvent.Finish -> finish()
+                    is HistoryModeViewModel.HistoryViewEvent.BackAndDelete->{
+                        navController.currentBackStackEntry?.savedStateHandle?.set(FRAG_KEY,it.data)
+                        navController.popBackStack()
+                    }
                     is HistoryModeViewModel.HistoryViewEvent.ShowChatHistory -> {
                         navController.navigate(
                             R.id.action_historiesFragment_to_historyFragment,

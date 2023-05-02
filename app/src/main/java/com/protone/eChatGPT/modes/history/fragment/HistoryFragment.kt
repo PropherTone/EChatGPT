@@ -62,7 +62,11 @@ class HistoryFragment :
                     viewModel.deleteChatHistory(position, chatItem) {
                         launch {
                             it.forEach { item -> remove(item) }
-                            if (getData().isEmpty()) activityViewModel.send(HistoryModeViewModel.HistoryViewEvent.Back)
+                            if (getData().isEmpty()) activityViewModel.send(
+                                HistoryModeViewModel.HistoryViewEvent.BackAndDelete(
+                                    arguments?.getString(CHAT_GROUP) ?: return@launch
+                                )
+                            )
                         }
                     }
                 }
