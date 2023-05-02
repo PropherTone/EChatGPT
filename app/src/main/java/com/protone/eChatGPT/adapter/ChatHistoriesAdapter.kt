@@ -114,9 +114,11 @@ class ChatHistoriesAdapter :
         }
     }
 
-    fun delete(delete: (Collection<ChatHistory>) -> Unit) {
+    fun getHistory(title: String) = snapshot().filter { it?.group == title }.filterNotNull()
+
+    fun getSelectedData(): Collection<ChatHistory> {
         val data = snapshot()
-        delete(getSelected().filter { data.indexOf(it) != -1 })
+        return getSelected().filter { data.indexOf(it) != -1 }
     }
 
     fun exitSelectMode() {

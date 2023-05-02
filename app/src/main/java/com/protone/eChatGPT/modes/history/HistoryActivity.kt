@@ -15,7 +15,7 @@ import com.protone.eChatGPT.viewModel.activityViewModel.HistoryModeViewModel
 class HistoryActivity : BaseActivity<HistoryActivityBinding, HistoryModeViewModel>() {
     override val viewModel: HistoryModeViewModel by viewModels()
 
-    companion object{
+    companion object {
         const val FRAG_KEY = "Data_Key"
     }
 
@@ -32,11 +32,15 @@ class HistoryActivity : BaseActivity<HistoryActivityBinding, HistoryModeViewMode
                     HistoryModeViewModel.HistoryViewEvent.Back -> {
                         navController.popBackStack()
                     }
+
                     HistoryModeViewModel.HistoryViewEvent.Finish -> finish()
-                    is HistoryModeViewModel.HistoryViewEvent.BackAndDelete->{
-                        navController.currentBackStackEntry?.savedStateHandle?.set(FRAG_KEY,it.data)
+                    is HistoryModeViewModel.HistoryViewEvent.BackAndDelete -> {
+                        navController.previousBackStackEntry?.savedStateHandle
+                            ?.getLiveData(FRAG_KEY, it.data)
+                            ?.postValue(it.data)
                         navController.popBackStack()
                     }
+
                     is HistoryModeViewModel.HistoryViewEvent.ShowChatHistory -> {
                         navController.navigate(
                             R.id.action_historiesFragment_to_historyFragment,
@@ -45,6 +49,7 @@ class HistoryActivity : BaseActivity<HistoryActivityBinding, HistoryModeViewMode
                             }
                         )
                     }
+
                     is HistoryModeViewModel.HistoryViewEvent.ContinueChat -> {
                         navController.popBackStack()
                         startActivity(

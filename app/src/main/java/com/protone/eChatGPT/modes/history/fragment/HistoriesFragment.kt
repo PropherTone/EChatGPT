@@ -28,6 +28,7 @@ import com.protone.eChatGPT.databinding.HistoriesOptionsNormalSceneBinding
 import com.protone.eChatGPT.modes.BaseActivityFragment
 import com.protone.eChatGPT.modes.history.HistoryActivity
 import com.protone.eChatGPT.utils.launchIO
+import com.protone.eChatGPT.utils.launchMain
 import com.protone.eChatGPT.utils.layoutInflater
 import com.protone.eChatGPT.viewModel.activityViewModel.HistoryModeViewModel
 import com.protone.eChatGPT.viewModel.fragViewModel.HistoriesViewModel
@@ -58,7 +59,7 @@ class HistoriesFragment :
                 },
                 active = {
                     it.delete.setOnClickListener {
-                        viewModel.deleteChatHistories()
+                        viewModel.deleteChatHistories(viewModel.chatHistoriesAdapter.getSelectedData())
                     }
                     it.exit.setOnClickListener {
                         viewModel.chatHistoriesAdapter.exitSelectMode()
@@ -70,12 +71,6 @@ class HistoriesFragment :
     }
 
     override fun HistoriesViewModel.init(savedInstanceState: Bundle?) {
-        findNavController().currentBackStackEntry
-            ?.savedStateHandle
-            ?.getLiveData<String>(HistoryActivity.FRAG_KEY)
-            ?.observe(this@HistoriesFragment) {
-
-            }
         if (savedInstanceState != null) chatHistoriesAdapter.refresh() else {
             chatHistoriesAdapter.setOnItemEvent(object : ChatHistoriesAdapter.ItemEvent {
                 override fun enterSelectMode() {
@@ -95,6 +90,12 @@ class HistoriesFragment :
                 }
 
             })
+            launchMain {
+                findNavController().currentBackStackEntry
+                    ?.savedStateHandle
+                    ?.getStateFlow(HistoryActivity.FRAG_KEY, "")
+                    ?.collect { deleteChatHistories(chatHistoriesAdapter.getHistory(it)) }
+            }
             launchIO {
                 getHistoryPagingSource(PAGE_SIZE).flow.collect {
                     chatHistoriesAdapter.submitData(it)
@@ -208,14 +209,11 @@ class HistoriesFragment :
         }
     }
 
-    private fun HistoriesViewModel.deleteChatHistories() {
-        chatHistoriesAdapter.delete { items ->
-            deleteChatHistory(items) { result ->
-                launch {
-                    chatHistoriesAdapter
-                        .submitData(PagingData.from(result.toList()))
-                    chatHistoriesAdapter.exitSelectMode()
-                }
+    private fun HistoriesViewModel.deleteChatHistories(data: Collection<ChatHistory>) {
+        deleteChatHistory(data) { result ->
+            launch {
+                chatHistoriesAdapter.submitData(PagingData.from(result.toList()))
+                chatHistoriesAdapter.exitSelectMode()
             }
         }
     }
