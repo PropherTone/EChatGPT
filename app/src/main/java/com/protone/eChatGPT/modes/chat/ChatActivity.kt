@@ -102,10 +102,11 @@ class ChatActivity : BaseActivity<ChatActivityBinding, ChatModeViewModel>(),
         }
     }
 
+    private var newIntent: Intent? = null
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        intent?.apply {
-            this@ChatActivity.intent.putExtras(intent)
+        newIntent = intent
+        newIntent?.apply {
             getStringExtra(OPTION)?.run {
                 if (viewModel.chatListAdapter.getData().isEmpty()) {
                     continueChat()
@@ -123,7 +124,7 @@ class ChatActivity : BaseActivity<ChatActivityBinding, ChatModeViewModel>(),
     }
 
     private fun continueChat() {
-        intent?.getStringExtra(GROUP)?.let {
+        newIntent?.getStringExtra(GROUP)?.let {
             combineChat(
                 combine = { setChat(it) },
                 noNeed = {
