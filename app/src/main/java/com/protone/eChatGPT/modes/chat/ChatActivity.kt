@@ -77,7 +77,13 @@ class ChatActivity : BaseActivity<ChatActivityBinding, ChatModeViewModel>(),
                             })
                     }
 
-                    ChatModeViewModel.ChatModViewEvent.Back -> navController.popBackStack()
+                    is ChatModeViewModel.ChatModViewEvent.Back -> {
+                        navController.popBackStack()
+                        if (event.option) {
+                            continueChat()
+                        }
+                    }
+
                     ChatModeViewModel.ChatModViewEvent.BackToMenu -> {
                         navController
                         startActivity(MenuActivity::class.intent.also {
@@ -99,19 +105,8 @@ class ChatActivity : BaseActivity<ChatActivityBinding, ChatModeViewModel>(),
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         intent?.apply {
+            this@ChatActivity.intent.putExtras(intent)
             getStringExtra(OPTION)?.run {
-                fun continueChat() {
-                    getStringExtra(GROUP)?.let {
-                        combineChat(
-                            combine = { setChat(it) },
-                            noNeed = {
-                                viewModel.chatListAdapter.clear()
-                                setChat(it)
-                            }
-                        )
-                    } ?: viewModel.chatListAdapter.clear()
-                    viewModel.send(ChatModeViewModel.ChatModViewEvent.NewChat)
-                }
                 if (viewModel.chatListAdapter.getData().isEmpty()) {
                     continueChat()
                     return@run
@@ -125,6 +120,19 @@ class ChatActivity : BaseActivity<ChatActivityBinding, ChatModeViewModel>(),
 
             }
         }
+    }
+
+    private fun continueChat() {
+        intent?.getStringExtra(GROUP)?.let {
+            combineChat(
+                combine = { setChat(it) },
+                noNeed = {
+                    viewModel.chatListAdapter.clear()
+                    setChat(it)
+                }
+            )
+        } ?: viewModel.chatListAdapter.clear()
+        viewModel.send(ChatModeViewModel.ChatModViewEvent.NewChat)
     }
 
     private inline fun startNewChat(

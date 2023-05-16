@@ -20,7 +20,7 @@ open class ChatModeViewModel : ViewModel() {
 
     sealed class ChatModViewEvent {
         data class SaveConversation(val startNewAfterSaved: Boolean = false) : ChatModViewEvent()
-        object Back : ChatModViewEvent()
+        data class Back(val option: Boolean) : ChatModViewEvent()
         object BackToMenu : ChatModViewEvent()
         object NewChat : ChatModViewEvent()
     }

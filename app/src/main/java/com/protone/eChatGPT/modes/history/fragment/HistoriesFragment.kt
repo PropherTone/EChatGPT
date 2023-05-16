@@ -5,6 +5,7 @@ import android.animation.TimeInterpolator
 import android.animation.ValueAnimator
 import android.graphics.Rect
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,7 +27,9 @@ import com.protone.eChatGPT.databinding.HistoriesFragmentBinding
 import com.protone.eChatGPT.databinding.HistoriesOptionsActiveSceneBinding
 import com.protone.eChatGPT.databinding.HistoriesOptionsNormalSceneBinding
 import com.protone.eChatGPT.modes.BaseActivityFragment
+import com.protone.eChatGPT.modes.TAG
 import com.protone.eChatGPT.modes.history.HistoryActivity
+import com.protone.eChatGPT.utils.launchDefault
 import com.protone.eChatGPT.utils.launchIO
 import com.protone.eChatGPT.utils.launchMain
 import com.protone.eChatGPT.utils.layoutInflater
@@ -59,7 +62,9 @@ class HistoriesFragment :
                 },
                 active = {
                     it.delete.setOnClickListener {
-                        viewModel.deleteChatHistories(viewModel.chatHistoriesAdapter.getSelectedData())
+                        viewModel.deleteChatHistories(
+                            viewModel.chatHistoriesAdapter.getSelectedData().toMutableList()
+                        )
                     }
                     it.exit.setOnClickListener {
                         viewModel.chatHistoriesAdapter.exitSelectMode()
@@ -90,17 +95,18 @@ class HistoriesFragment :
                 }
 
             })
-            launchMain {
-                findNavController().currentBackStackEntry
-                    ?.savedStateHandle
-                    ?.getStateFlow(HistoryActivity.FRAG_KEY, "")
-                    ?.collect { deleteChatHistories(chatHistoriesAdapter.getHistory(it)) }
-            }
             launchIO {
                 getHistoryPagingSource(PAGE_SIZE).flow.collect {
                     chatHistoriesAdapter.submitData(it)
                 }
             }
+            findNavController().currentBackStackEntry
+                ?.savedStateHandle
+                ?.getLiveData(HistoryActivity.FRAG_KEY, "")
+                ?.observe(this@HistoriesFragment) {
+                    if (it.isEmpty()) return@observe
+                    deleteChatHistories(chatHistoriesAdapter.getHistory(it).toMutableList())
+                }
         }
     }
 
@@ -209,7 +215,7 @@ class HistoriesFragment :
         }
     }
 
-    private fun HistoriesViewModel.deleteChatHistories(data: Collection<ChatHistory>) {
+    private fun HistoriesViewModel.deleteChatHistories(data: MutableList<ChatHistory>) {
         deleteChatHistory(data) { result ->
             launch {
                 chatHistoriesAdapter.submitData(PagingData.from(result.toList()))

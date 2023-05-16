@@ -18,11 +18,13 @@ class HistoriesViewModel : ViewModel() {
     }
 
     fun deleteChatHistory(
-        chatHistories: Collection<ChatHistory>,
+        chatHistories: MutableList<ChatHistory>,
         callback: (Collection<ChatHistory>) -> Unit
     ) {
         viewModelScope.launchIO {
-            callback(chatHistoryDAO.deleteChatHistories(chatHistories))
+            callback(
+                chatHistories.also { it.removeAll(chatHistoryDAO.deleteChatHistories(chatHistories)) }
+            )
         }
     }
 

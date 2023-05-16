@@ -44,9 +44,7 @@ class HistoryActivity : BaseActivity<HistoryActivityBinding, HistoryModeViewMode
                     is HistoryModeViewModel.HistoryViewEvent.ShowChatHistory -> {
                         navController.navigate(
                             R.id.action_historiesFragment_to_historyFragment,
-                            Bundle().apply {
-                                putString(HistoryFragment.CHAT_GROUP, it.group)
-                            }
+                            Bundle().apply { putString(HistoryFragment.CHAT_GROUP, it.group) }
                         )
                     }
 

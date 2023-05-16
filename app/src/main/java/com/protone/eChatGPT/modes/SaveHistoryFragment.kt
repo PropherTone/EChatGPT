@@ -56,7 +56,11 @@ abstract class SaveHistoryFragment<AVM : ChatModeViewModel> :
             when (it) {
                 SaveChatViewModel.SAVE_SUCCESS -> {
                     binding.name.hideSoftInput()
-                    activityViewModel.send(ChatModeViewModel.ChatModViewEvent.Back)
+                    activityViewModel.send(
+                        ChatModeViewModel.ChatModViewEvent.Back(
+                            arguments?.getBoolean(FINISH_OPTION) ?: false
+                        )
+                    )
                 }
 
                 SaveChatViewModel.SAVING -> binding.saveProgress.isVisible = true
@@ -84,7 +88,11 @@ abstract class SaveHistoryFragment<AVM : ChatModeViewModel> :
                 when (it) {
                     SaveConversationEvent.Finish -> {
                         binding.name.hideSoftInput()
-                        activityViewModel.send(ChatModeViewModel.ChatModViewEvent.Back)
+                        activityViewModel.send(
+                            ChatModeViewModel.ChatModViewEvent.Back(
+                                arguments?.getBoolean(FINISH_OPTION) ?: false
+                            )
+                        )
                     }
 
                     SaveConversationEvent.Save -> {
